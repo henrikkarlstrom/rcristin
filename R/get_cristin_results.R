@@ -97,7 +97,8 @@ get_cristin_results <- function(NVI = TRUE,
         tibble::as_tibble(jsonlite::fromJSON(
           httr::content(x, "text"), flatten = TRUE))) %>%
         dplyr::bind_rows(.id = "cristin_result_id") %>%
-        tidyr::unnest()
+        tidyr::unnest() %>%
+        dplyr::rename("contributor_url" = url)
 
       # creates a new tibble for funding source data, which can contain multiple entries
       # per Cristin result
@@ -204,12 +205,7 @@ get_cristin_results <- function(NVI = TRUE,
       output <- lapply(analyse, function(x) dplyr::left_join(
         data[["base_data"]], data[[x]])) %>%
         purrr::reduce(dplyr::left_join,
-                      by = c("cristin_result_id", "open_access", "original_language",
-                             "url", "volume", "issue", "created.date",
-                             "last_modified.date", "title_language", "title",
-                             "category.name.en", "journal.name", "journal.publisher.name",
-                             "year_published", "year_reported", "year_online",
-                             "year_printed", "contributors.url", "journal.nvi_level"))
+                      by = c("cristin_result_id"))
       return(output)
     } else {
       stop('Error: Analysis parameters must be one of
