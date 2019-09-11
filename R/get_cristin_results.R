@@ -41,7 +41,7 @@ get_cristin_results <- function(NVI = TRUE,
 
   # checks whether the results returned should be limited to scientific publications
   if(NVI == TRUE) {
-    category = "(ARTICLE or MONOGRAPHACA or ANTHOLOGYACA)"
+    category = "ARTICLE"
   } else {
     category = category
   }
