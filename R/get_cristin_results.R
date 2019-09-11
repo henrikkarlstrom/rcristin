@@ -97,6 +97,7 @@ get_cristin_results <- function(NVI = TRUE,
         tibble::as_tibble(jsonlite::fromJSON(
           httr::content(x, "text"), flatten = TRUE))) %>%
         dplyr::bind_rows(.id = "cristin_result_id") %>%
+        dplyr::filter(!purrr::map_lgl(affiliations, is.null)) %>%
         tidyr::unnest() %>%
         dplyr::rename("contributor_url" = url)
 
