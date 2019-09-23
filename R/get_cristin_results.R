@@ -98,14 +98,17 @@ get_cristin_results <- function(NVI = TRUE,
           httr::content(x, "text"), flatten = TRUE))) %>%
         dplyr::bind_rows(.id = "cristin_result_id") %>%
         dplyr::filter(!purrr::map_lgl(affiliations, is.null)) %>%
-        tidyr::unnest() %>%
+        tidyr::unnest(cols = c(affiliations)) %>%
         dplyr::rename("contributor_url" = url)
 
       # creates a new tibble for funding source data, which can contain multiple entries
       # per Cristin result
       if("funding_sources" %in% analyse){
         if("funding_sources" %in% colnames(base_data)){
-          funding_sources <- unpack("funding_sources", base_data) %>%
+          funding_sources <- base_data %>%
+            dplyr::select(cristin_result_id, funding_sources) %>%
+            dplyr::filter(!purrr::map_lgl(funding_sources, is.null)) %>%
+            tidyr::unnest(cols = funding_sources) %>%
             dplyr::rename("funding_source_project_code" = project_code,
                           "funding_source_name" = funding_source_name.en)
         } else {
@@ -125,7 +128,10 @@ get_cristin_results <- function(NVI = TRUE,
       # per Cristin result
       if("links" %in% analyse){
         if("links" %in% colnames(base_data)){
-          links <- unpack("links", base_data) %>%
+          links <- base_data %>%
+            dplyr::select(cristin_result_id, links) %>%
+            dplyr::filter(!purrr::map_lgl(links, is.null)) %>%
+            tidyr::unnest(cols = links) %>%
             dplyr::rename("link_type" = url_type,
                           "link_url" = url)
         } else {
@@ -143,7 +149,10 @@ get_cristin_results <- function(NVI = TRUE,
       # per Cristin result
       if("projects" %in% analyse){
         if("projects" %in% colnames(base_data)){
-          projects <- unpack("projects", base_data) %>%
+          projects <- base_data %>%
+            dplyr::select(cristin_result_id, projects) %>%
+            dplyr::filter(!purrr::map_lgl(projects, is.null)) %>%
+            tidyr::unnest(cols = projects) %>%
             tidyr::gather(starts_with("title"),
                           key = "language",
                           value = "project_code") %>%
@@ -165,7 +174,10 @@ get_cristin_results <- function(NVI = TRUE,
       # creates a new tibble with journal identifiers,
       # which can be both printed and electronic
       if("journal.international_standard_numbers" %in% colnames(base_data)){
-        journal_id <- unpack("journal.international_standard_numbers", base_data) %>%
+        journal_id <- base_data %>%
+          dplyr::select(cristin_result_id, journal.international_standard_numbers) %>%
+          dplyr::filter(!purrr::map_lgl(journal.international_standard_numbers, is.null)) %>%
+          tidyr::unnest(cols = journal.international_standard_numbers) %>%
           dplyr::rename("journal_id_type" = type,
                         "journal_id" = value)
       } else {
@@ -202,7 +214,7 @@ get_cristin_results <- function(NVI = TRUE,
     if(all(analyse %in% c("base_data", "links", "projects",
                           "contributors", "funding_sources"))){
       output <- lapply(analyse, function(x) dplyr::left_join(
-        data[["base_data"]], data[[x]])) %>%
+        data[["base_data"]], data[[x]], by = c("cristin_result_id"))) %>%
         purrr::reduce(dplyr::left_join,
                       by = c("cristin_result_id"))
       return(output)
@@ -212,22 +224,4 @@ get_cristin_results <- function(NVI = TRUE,
     }
   }
 
-}
-
-
-
-#' Handle list-columns with NULL values stemming from the JSON parsing
-#'
-#' @param x string
-#' @param base_data data frame
-#'
-#' @return data frame
-#' @importFrom magrittr %>%
-#' @examples
-#' unpack("projects", base_data)
-
-unpack <- function(x, base_data) {
-  base_data[, c("cristin_result_id", x)] %>%
-    dplyr::filter(!purrr::map_lgl(base_data[[x]], is.null)) %>%
-    tidyr::unnest()
 }
