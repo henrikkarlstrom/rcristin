@@ -153,7 +153,7 @@ get_cristin_results <- function(NVI = TRUE,
             dplyr::select(cristin_result_id, projects) %>%
             dplyr::filter(!purrr::map_lgl(projects, is.null)) %>%
             tidyr::unnest(cols = projects) %>%
-            tidyr::gather(starts_with("title"),
+            tidyr::gather(dplyr::starts_with("title"),
                           key = "language",
                           value = "project_code") %>%
             dplyr::select(-language) %>%
@@ -213,10 +213,19 @@ get_cristin_results <- function(NVI = TRUE,
 
     if(all(analyse %in% c("base_data", "links", "projects",
                           "contributors", "funding_sources"))){
-      output <- lapply(analyse, function(x) dplyr::left_join(
-        data[["base_data"]], data[[x]], by = c("cristin_result_id"))) %>%
-        purrr::reduce(dplyr::left_join,
-                      by = c("cristin_result_id"))
+      output <- dplyr::left_join(data[["base_data"]],
+                                 data[["links"]],
+                                 by = c("cristin_result_id"))
+      output <- dplyr::left_join(output,
+                                 data[["projects"]],
+                                 by = c("cristin_result_id"))
+      output <- dplyr::left_join(output,
+                                 data[["contributors"]],
+                                 by = c("cristin_result_id"))
+      output <- dplyr::left_join(output,
+                                 data[["funding_sources"]],
+                                 by = c("cristin_result_id"))
+      output <- Filter(function(x) !all(is.na(x)), output)
       return(output)
     } else {
       stop('Error: Analysis parameters must be one of
