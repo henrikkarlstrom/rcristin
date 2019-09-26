@@ -210,8 +210,9 @@ get_cristin_results <- function(NVI = TRUE,
                  contributors = contributors)
 
     # combine the base data with the specified analysis
-
-    if(all(analyse %in% c("base_data", "links", "projects",
+    if(analyse == "base_data") {
+      return(data[["base_data"]])
+    } else if(all(analyse %in% c("links", "projects",
                           "contributors", "funding_sources"))){
       output <- dplyr::left_join(data[["base_data"]],
                                  data[["links"]],
