@@ -21,13 +21,15 @@
 #' @examples
 #' get_cristin_results(contributor = "25062")
 
-get_cristin_results <- function(NVI = TRUE,
-                                unit = NULL,
+get_cristin_results <- function(unit = NULL,
+                                institution = NULL,
                                 contributor = NULL,
                                 project_code = NULL,
                                 user = NULL,
                                 category = NULL,
                                 funding_source = NULL,
+                                created_since = NULL,
+                                created_before = NULL,
                                 published_since = NULL,
                                 published_before = NULL,
                                 per_page = 999,
@@ -39,19 +41,13 @@ get_cristin_results <- function(NVI = TRUE,
   counter <- 0
   total <- 1
 
-  # checks whether the results returned should be limited to scientific publications
-  if(NVI == TRUE) {
-    category = "ARTICLE"
-  } else {
-    category = category
-  }
-
-  # pagination
+    # pagination
   while(counter < total) {
 
     # API call to Cristin
     base_data <- httr::GET(url = "https://api.cristin.no/v2/results?",
                            query = list(unit = unit,
+                                        institution = institution,
                                         contributor = contributor,
                                         project_code = project_code,
                                         user = user,
@@ -59,13 +55,15 @@ get_cristin_results <- function(NVI = TRUE,
                                         funding_source = funding_source,
                                         published_since = published_since,
                                         published_before = published_before,
+                                        created_since = created_since,
+                                        created_before = created_before,
                                         per_page = per_page,
                                         page = page,
                                         fields = fields))
 
     # checking if the response returns a valid status and aborts if the call has been
     # wrongly specified or there are no results
-    if(httr::status_code(base_data) != 200 || base_data[["headers"]][["x-total-count"]] == 0) {
+    if(base_data[["status_code"]] != 200 || base_data[["headers"]][["x-total-count"]] == 0) {
 
       counter <- total + 1
       return(NA)
@@ -88,6 +86,7 @@ get_cristin_results <- function(NVI = TRUE,
       base_data[["title_language"]] <- gsub("title.", "", base_data[["title_language"]])
 
       # fetches contributor data from the Cristin API and stores it in a data.frame
+      base_data <- base_data[!is.na(base_data[["contributors.url"]]),]
       contributors <- lapply(unique(base_data[["contributors.url"]]),
                              httr::GET)
 
@@ -198,7 +197,7 @@ get_cristin_results <- function(NVI = TRUE,
                       dplyr::contains("year"),
                       "title",
                       "contributors.url",
-                      "journal.nvi_level"
+                      dplyr::contains("journal.nvi_level")
         )
 
     }
