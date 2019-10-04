@@ -4,15 +4,14 @@
 \alias{get_cristin_results}
 \title{Get Cristin results}
 \usage{
-get_cristin_results(NVI = TRUE, unit = NULL, contributor = NULL,
-  project_code = NULL, user = NULL, category = NULL,
-  funding_source = NULL, published_since = NULL,
+get_cristin_results(unit = NULL, institution = NULL,
+  contributor = NULL, project_code = NULL, user = NULL,
+  category = NULL, funding_source = NULL, created_since = NULL,
+  created_before = NULL, published_since = NULL,
   published_before = NULL, per_page = 999, page = 1,
   fields = "all", analyse = "base_data")
 }
 \arguments{
-\item{NVI}{logical}
-
 \item{unit}{string}
 
 \item{contributor}{string}
@@ -36,6 +35,8 @@ get_cristin_results(NVI = TRUE, unit = NULL, contributor = NULL,
 \item{fields}{string}
 
 \item{analyse}{string}
+
+\item{NVI}{logical}
 }
 \value{
 data frame
