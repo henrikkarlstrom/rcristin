@@ -14,6 +14,8 @@ get_cristin_results(unit = NULL, institution = NULL,
 \arguments{
 \item{unit}{string}
 
+\item{institution}{string}
+
 \item{contributor}{string}
 
 \item{project_code}{string}
@@ -23,6 +25,8 @@ get_cristin_results(unit = NULL, institution = NULL,
 \item{category}{string}
 
 \item{funding_source}{string}
+
+\item{created_since}{string}
 
 \item{published_since}{string}
 
@@ -36,7 +40,7 @@ get_cristin_results(unit = NULL, institution = NULL,
 
 \item{analyse}{string}
 
-\item{NVI}{logical}
+\item{created_befor}{string}
 }
 \value{
 data frame
