@@ -20,4 +20,5 @@ Imports:
     tibble,
     tidyr,
     dplyr,
-    purrr
+    purrr,
+    magrittr

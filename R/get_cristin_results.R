@@ -17,7 +17,7 @@
 #' @param analyse string
 #'
 #' @return data frame
-#' @importFrom magrittr %>%
+#' @importFrom magrittr "%>%"
 #' @export
 #'
 #' @examples
