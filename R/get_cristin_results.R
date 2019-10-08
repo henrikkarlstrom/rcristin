@@ -91,7 +91,7 @@ get_cristin_results <- function(unit = NULL,
                       na.rm = TRUE)%>%
         dplyr::select(-dplyr::starts_with("summary"))
 
-      base_data <- rbind(base_data, base_data2)
+      base_data <- dplyr::bind_rows(base_data, base_data2)
 
     }
 
