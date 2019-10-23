@@ -8,13 +8,13 @@
 #' @param category string
 #' @param funding_source string
 #' @param created_since string
-#' @param created_befor string
+#' @param created_before string
 #' @param published_since string
 #' @param published_before string
 #' @param per_page string
 #' @param page string
 #' @param fields string
-#' @param analyse string
+#' @param simplify string
 #'
 #' @return data frame
 #' @importFrom magrittr "%>%"
@@ -37,7 +37,7 @@ get_cristin_results <- function(unit = NULL,
                                 per_page = 999,
                                 page = 1,
                                 fields = "all",
-                                analyse = "base_data") {
+                                simplify = FALSE) {
 
   # API call to Cristin
   base_data <- httr::GET(url = "https://api.cristin.no/v2/results?",
@@ -56,10 +56,10 @@ get_cristin_results <- function(unit = NULL,
                                       page = page,
                                       fields = fields))
 
-  # checking if the response returns a valid status and aborts if the call has been
-  # wrongly specified or there are no results
-  if(base_data[["status_code"]] != 200 || base_data[["headers"]][["x-total-count"]] == 0) {
-    counter <- total + 1
+  # checking if the response returns a valid status and aborts if the call has been wrongly specified or there are no results
+  if(base_data[["status_code"]] != 200
+     ||
+     base_data[["headers"]][["x-total-count"]] == 0) {
     return(NA)
 
   } else {
@@ -67,15 +67,15 @@ get_cristin_results <- function(unit = NULL,
     # fetches next page URL
     paging <- base_data[["headers"]][["link"]]
 
-    # creates the base data tibble, containing the variables connected to a Cristin result
-    # that only occur once
+    # creates the base data tibble, containing the variables connected to a Cristin result that only occur once
     base_data <- tibble::as_tibble(jsonlite::fromJSON(
       httr::content(base_data, "text"), flatten = TRUE)) %>%
       tidyr::gather(dplyr::starts_with("title"),
                     key = "title_language",
                     value = "title",
                     na.rm = TRUE) %>%
-      dplyr::select(-dplyr::starts_with("summary"))
+      dplyr::select(-dplyr::starts_with("summary"),
+                    -import_sources)
 
     # fetches the rest of the results from the API call
     while(grepl("next", paging)){
@@ -98,139 +98,62 @@ get_cristin_results <- function(unit = NULL,
 
     base_data[["title_language"]] <- gsub("title.", "", base_data[["title_language"]])
 
+    data <- list()
 
-    # fetches contributor data from the Cristin API and stores it in a data.frame
-    base_data <- base_data[!is.na(base_data[["contributors.url"]]),]
 
-    if("contributors" %in% analyse){
-      contributors <- lapply(unique(base_data[["contributors.url"]]),
-                             httr::GET)
-
-      names(contributors) <- unique(base_data[["cristin_result_id"]])
-
-      contributors <- lapply(contributors, function(x)
-        tibble::as_tibble(jsonlite::fromJSON(
-          httr::content(x, "text"), flatten = TRUE))) %>%
-        dplyr::bind_rows(.id = "cristin_result_id") %>%
-        dplyr::filter(!purrr::map_lgl(affiliations, is.null)) %>%
-        tidyr::unnest(cols = c(affiliations)) %>%
-        dplyr::rename("contributor_url" = url)
-
-    } else {
-
-      contributors <- tibble::tibble(cristin_result_id = base_data[["cristin_result_id"]],
-                                     contributors = NA)
-
-    }
-
-    # creates a new tibble for funding source data, which can contain multiple entries
-    # per Cristin result
-    if("funding_sources" %in% analyse){
-
+    # creates a new tibble for funding source data, which can contain multiple entries per Cristin result
       if("funding_sources" %in% colnames(base_data)){
 
-        funding_sources <- base_data %>%
-          dplyr::select(cristin_result_id, funding_sources) %>%
-          dplyr::filter(!purrr::map_lgl(funding_sources, is.null)) %>%
-          tidyr::unnest(cols = funding_sources) %>%
+        funding_sources <- as.list(base_data[["funding_sources"]])
+        names(funding_sources) <- base_data[["cristin_result_id"]]
+        funding_sources <- purrr::compact(funding_sources) %>%
+          dplyr::bind_rows(.id = "cristin_result_id") %>%
           dplyr::rename("funding_source_project_code" = project_code,
                         "funding_source_name" = funding_source_name.en)
-
-      } else {
-
-        funding_sources <- tibble::tibble(cristin_result_id = base_data[["cristin_result_id"]],
-                                          funding_source_code = NA,
-                                          funding_source_project_code = NA,
-                                          funding_source_name = NA)
+        data <- append(data, list(funding_sources))
 
       }
 
-    } else {
-
-      funding_sources <- tibble::tibble(cristin_result_id = base_data[["cristin_result_id"]],
-                                        funding_source_code = NA,
-                                        funding_source_project_code = NA,
-                                        funding_source_name = NA)
-    }
-
-    # creates a new tibble for links data, which can contain multiple entries
-    # per Cristin result
-    if("links" %in% analyse){
-
+    # creates a new tibble for links data, which can contain multiple entries per Cristin result
       if("links" %in% colnames(base_data)){
 
-        links <- base_data %>%
-          dplyr::select(cristin_result_id, links) %>%
-          dplyr::filter(!purrr::map_lgl(links, is.null)) %>%
-          tidyr::unnest(cols = links) %>%
+        links <- as.list(base_data[["links"]])
+        names(links) <- base_data[["cristin_result_id"]]
+        links <- purrr::compact(links) %>%
+          dplyr::bind_rows(.id = "cristin_result_id") %>%
           dplyr::rename("link_type" = url_type,
                         "link_url" = url)
 
-      } else {
-
-        links <- tibble::tibble(cristin_result_id = base_data[["cristin_result_id"]],
-                                link_type = NA,
-                                link_url = NA)
+        data <- append(data, list(links))
 
       }
 
-    } else {
-
-      links <- tibble::tibble(cristin_result_id = base_data[["cristin_result_id"]],
-                              link_type = NA,
-                              link_url = NA)
-    }
-
-    # creates a new tibble for project data, which can contain multiple entries
-    # per Cristin result
-    if("projects" %in% analyse){
-
+    # creates a new tibble for project data, which can contain multiple entries per Cristin result
       if("projects" %in% colnames(base_data)){
 
-        projects <- base_data %>%
-          dplyr::select(cristin_result_id, projects) %>%
-          dplyr::filter(!purrr::map_lgl(projects, is.null)) %>%
-          tidyr::unnest(cols = projects) %>%
-          tidyr::gather(dplyr::starts_with("title"),
-                        key = "language",
-                        value = "project_code") %>%
-          dplyr::select(-language) %>%
+        projects <- as.list(base_data[["projects"]])
+        names(projects) <- base_data[["cristin_result_id"]]
+        projects <- purrr::compact(projects) %>%
+          dplyr::bind_rows(.id = "cristin_result_id") %>%
+          dplyr::select(-dplyr::starts_with("title")) %>%
           dplyr::rename("project_url" = url)
 
-      } else {
-
-        projects <- tibble::tibble(cristin_result_id = base_data[["cristin_result_id"]],
-                                   cristin_project_id = NA,
-                                   project_url = NA,
-                                   project_code = NA)
+        data <- append(data, list(projects))
 
       }
 
-    } else {
-
-      projects <- tibble::tibble(cristin_result_id = base_data[["cristin_result_id"]],
-                                 cristin_project_id = NA,
-                                 project_url = NA,
-                                 project_code = NA)
-
-    }
-
-    # creates a new tibble with journal identifiers,
-    # which can be both printed and electronic
+    # creates a new tibble with journal identifiers, which can be both printed and electronic
     if("journal.international_standard_numbers" %in% colnames(base_data)){
 
-      journal_id <- base_data %>%
-        dplyr::select(cristin_result_id, journal.international_standard_numbers) %>%
-        dplyr::filter(!purrr::map_lgl(journal.international_standard_numbers, is.null)) %>%
-        tidyr::unnest(cols = journal.international_standard_numbers) %>%
+      journal_id <- as.list(base_data[["journal.international_standard_numbers"]])
+      names(journal_id) <- base_data[["cristin_result_id"]]
+      journal_id <- purrr::compact(journal_id) %>%
+        dplyr::bind_rows(.id = "cristin_result_id") #%>%
         dplyr::rename("journal_id_type" = type,
                       "journal_id" = value)
 
-    } else {
+      data <- append(data, list(journal_id))
 
-      journal_id <- tibble::tibble(cristin_result_id = base_data[["cristin_result_id"]],
-                                   journal_id_type = NA,
-                                   journal_id = NA)
     }
 
     #selects the columns containing unique observations per publication
@@ -247,38 +170,20 @@ get_cristin_results <- function(unit = NULL,
                     "contributors.url",
                     dplyr::contains("journal.nvi_level")
       )
+
+    data <- append(data, list(base_data), after = 0)
   }
 
-  # save the whole dataset in the form of a list of tibbles
-  data <- list(base_data = base_data,
-               funding_sources = funding_sources,
-               links = links,
-               projects = projects,
-               contributors = contributors)
 
   # combine the base data with the specified analysis
-  if(analyse == "base_data") {
+  if(simplify) {
 
-    return(data[["base_data"]])
-
-  } else if(all(analyse %in% c("links", "projects",
-                        "contributors", "funding_sources"))){
-
-    output <- dplyr::left_join(data[["base_data"]], data[["links"]], by = c("cristin_result_id")) %>%
-      dplyr::left_join(., data[["projects"]], by = c("cristin_result_id")) %>%
-      dplyr::left_join(., data[["contributors"]], by = c("cristin_result_id")) %>%
-      dplyr::left_join(., data[["funding_sources"]], by = c("cristin_result_id"))
-
-    output <- Filter(function(x) !all(is.na(x)), output)
-
-    output <- distinct(output)
-
-    return(output)
+    data <- Reduce(function(x, y) merge(x, y, by = "cristin_result_id", all = TRUE), data)
+    return(data)
 
   } else {
 
-    stop('Error: Analysis parameters must be one of
-         c("links", "projects", "contributors", "funding_sources").')
+    return(data)
 
   }
 

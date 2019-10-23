@@ -9,7 +9,7 @@ get_cristin_results(unit = NULL, institution = NULL,
   category = NULL, funding_source = NULL, created_since = NULL,
   created_before = NULL, published_since = NULL,
   published_before = NULL, per_page = 999, page = 1,
-  fields = "all", analyse = "base_data")
+  fields = "all", simplify = FALSE)
 }
 \arguments{
 \item{unit}{string}
@@ -28,6 +28,8 @@ get_cristin_results(unit = NULL, institution = NULL,
 
 \item{created_since}{string}
 
+\item{created_before}{string}
+
 \item{published_since}{string}
 
 \item{published_before}{string}
@@ -38,9 +40,7 @@ get_cristin_results(unit = NULL, institution = NULL,
 
 \item{fields}{string}
 
-\item{analyse}{string}
-
-\item{created_befor}{string}
+\item{simplify}{string}
 }
 \value{
 data frame
