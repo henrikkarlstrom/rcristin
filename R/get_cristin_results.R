@@ -64,7 +64,7 @@ get_cristin_results <- function(unit = NULL,
 
   } else {
 
-    # fetches next page URL
+    # fetches next page URL, for pagination purposes
     paging <- base_data[["headers"]][["link"]]
 
     # creates the base data tibble, containing the variables connected to a Cristin result that only occur once
@@ -99,10 +99,13 @@ get_cristin_results <- function(unit = NULL,
 
     base_data[["title_language"]] <- gsub("title.", "", base_data[["title_language"]])
 
+    # creates an empty list to append with the various nested columns that come from the JSON API response
     data <- list()
 
 
-    # creates a new tibble for funding source data, which can contain multiple entries per Cristin result
+    # the following operations unnest the various list-columns, removes any NULL rows and appends the result to the data list.
+
+    # funding source information
       if("funding_sources" %in% colnames(base_data)){
 
         funding_sources <- as.list(base_data[["funding_sources"]])
@@ -115,7 +118,7 @@ get_cristin_results <- function(unit = NULL,
 
       }
 
-    # creates a new tibble for links data, which can contain multiple entries per Cristin result
+    # links to publication manuscript locations
       if("links" %in% colnames(base_data)){
 
         links <- as.list(base_data[["links"]])
@@ -129,7 +132,7 @@ get_cristin_results <- function(unit = NULL,
 
       }
 
-    # creates a new tibble for project data, which can contain multiple entries per Cristin result
+    # project information
       if("projects" %in% colnames(base_data)){
 
         projects <- as.list(base_data[["projects"]])
@@ -143,7 +146,7 @@ get_cristin_results <- function(unit = NULL,
 
       }
 
-    # creates a new tibble with journal identifiers, which can be both printed and electronic
+    # journal ISSN values
     if("journal.international_standard_numbers" %in% colnames(base_data)){
 
       journal_id <- as.list(base_data[["journal.international_standard_numbers"]])
@@ -175,10 +178,14 @@ get_cristin_results <- function(unit = NULL,
       )
 
     data <- append(data, list(base_data), after = 0)
+    names(data) <- c("results",
+                     "funding_sources",
+                     "links",
+                     "projects",
+                     "ISSN")
   }
 
-
-  # combine the base data with the specified analysis
+  # if simplify is set to true, the list is joined into one large data frame, which allows for multiple rows of data about the same publications
   if(simplify) {
 
     data <- Reduce(function(x, y) merge(x, y, by = "cristin_result_id", all = TRUE), data)
