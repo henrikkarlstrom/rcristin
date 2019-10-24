@@ -78,23 +78,24 @@ get_cristin_results <- function(unit = NULL,
                     -import_sources)
 
     # fetches the rest of the results from the API call
-    while(grepl("next", paging)){
-      url <- regmatches(paging, regexec("<(.+?)>", paging))[[1]][2]
+    if(!is.null(paging)) {
+      while(grepl("next", paging)){
+        url <- regmatches(paging, regexec("<(.+?)>", paging))[[1]][2]
 
-      base_data2 <- httr::GET(url)
-      paging <- base_data2[["headers"]][["link"]]
-      base_data2 <- tibble::as_tibble(jsonlite::fromJSON(
-        httr::content(base_data2, "text"), flatten = TRUE)) %>%
-        tidyr::gather(dplyr::starts_with("title"),
-                      key = "title_language",
-                      value = "title",
-                      na.rm = TRUE)%>%
-        dplyr::select(-dplyr::starts_with("summary"))
+        base_data2 <- httr::GET(url)
+        paging <- base_data2[["headers"]][["link"]]
+        base_data2 <- tibble::as_tibble(jsonlite::fromJSON(
+          httr::content(base_data2, "text"), flatten = TRUE)) %>%
+          tidyr::gather(dplyr::starts_with("title"),
+                        key = "title_language",
+                        value = "title",
+                        na.rm = TRUE)%>%
+          dplyr::select(-dplyr::starts_with("summary"))
 
-      base_data <- dplyr::bind_rows(base_data, base_data2)
+        base_data <- dplyr::bind_rows(base_data, base_data2)
 
+      }
     }
-
 
     base_data[["title_language"]] <- gsub("title.", "", base_data[["title_language"]])
 
@@ -148,9 +149,11 @@ get_cristin_results <- function(unit = NULL,
       journal_id <- as.list(base_data[["journal.international_standard_numbers"]])
       names(journal_id) <- base_data[["cristin_result_id"]]
       journal_id <- purrr::compact(journal_id) %>%
-        dplyr::bind_rows(.id = "cristin_result_id") #%>%
-        dplyr::rename("journal_id_type" = type,
-                      "journal_id" = value)
+        dplyr::bind_rows(.id = "cristin_result_id") %>%
+        unique() %>%
+        tidyr::pivot_wider(names_from = type,
+                           values_from = value,
+                           names_prefix = "ISSN_")
 
       data <- append(data, list(journal_id))
 
