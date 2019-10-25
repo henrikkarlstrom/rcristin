@@ -75,7 +75,7 @@ get_cristin_results <- function(unit = NULL,
                     value = "title",
                     na.rm = TRUE) %>%
       dplyr::select(-dplyr::starts_with("summary"),
-                    -import_sources)
+                    -dplyr::starts_with("import"))
 
     # fetches the rest of the results from the API call
     if(!is.null(paging)) {
@@ -114,7 +114,7 @@ get_cristin_results <- function(unit = NULL,
           dplyr::bind_rows(.id = "cristin_result_id") %>%
           dplyr::rename("funding_source_project_code" = project_code,
                         "funding_source_name" = funding_source_name.en)
-        data <- append(data, list(funding_sources))
+        data <- append(data, list(funding_sources = funding_sources))
 
       }
 
@@ -128,7 +128,7 @@ get_cristin_results <- function(unit = NULL,
           dplyr::rename("link_type" = url_type,
                         "link_url" = url)
 
-        data <- append(data, list(links))
+        data <- append(data, list(links = links))
 
       }
 
@@ -142,7 +142,7 @@ get_cristin_results <- function(unit = NULL,
           dplyr::select(-dplyr::starts_with("title")) %>%
           dplyr::rename("project_url" = url)
 
-        data <- append(data, list(projects))
+        data <- append(data, list(projects = projects))
 
       }
 
@@ -158,7 +158,7 @@ get_cristin_results <- function(unit = NULL,
                            values_from = value,
                            names_prefix = "ISSN_")
 
-      data <- append(data, list(journal_id))
+      data <- append(data, list(journal_id = journal_id))
 
     }
 
@@ -177,12 +177,7 @@ get_cristin_results <- function(unit = NULL,
                     dplyr::contains("journal.nvi_level")
       )
 
-    data <- append(data, list(base_data), after = 0)
-    names(data) <- c("results",
-                     "funding_sources",
-                     "links",
-                     "projects",
-                     "ISSN")
+    data <- append(data, list(results = base_data), after = 0)
   }
 
   # if simplify is set to true, the list is joined into one large data frame, which allows for multiple rows of data about the same publications
