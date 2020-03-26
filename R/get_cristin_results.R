@@ -55,6 +55,91 @@ get_cristin_results <- function(
   NVI = FALSE
   ) {
 
+  if(NVI) {
+
+    articles <- get_cristin_results(
+      doi = doi,
+      title = title,
+      contributor = contributor,
+      issn = issn,
+      unit = unit,
+      institution = institution,
+      user = user,
+      category = "ARTICLE",
+      published_since = published_since,
+      published_before = published_before,
+      created_since = created_since,
+      created_before = created_before,
+      modified_since = modified_since,
+      modified_before = modified_before,
+      year_reported = year_reported,
+      project_code = project_code,
+      funding_source = funding_source,
+      page = page,
+      per_page = per_page,
+      fields = fields
+      )
+
+    monographies <- get_cristin_results(
+      doi = doi,
+      title = title,
+      contributor = contributor,
+      issn = issn,
+      unit = unit,
+      institution = institution,
+      user = user,
+      category = "MONOGRAPHACA",
+      published_since = published_since,
+      published_before = published_before,
+      created_since = created_since,
+      created_before = created_before,
+      modified_since = modified_since,
+      modified_before = modified_before,
+      year_reported = year_reported,
+      project_code = project_code,
+      funding_source = funding_source,
+      page = page,
+      per_page = per_page,
+      fields = fields
+    )
+
+    chapters <- get_cristin_results(
+      doi = doi,
+      title = title,
+      contributor = contributor,
+      issn = issn,
+      unit = unit,
+      institution = institution,
+      user = user,
+      category = "CHAPTERACADEMIC",
+      published_since = published_since,
+      published_before = published_before,
+      created_since = created_since,
+      created_before = created_before,
+      modified_since = modified_since,
+      modified_before = modified_before,
+      year_reported = year_reported,
+      project_code = project_code,
+      funding_source = funding_source,
+      page = page,
+      per_page = per_page,
+      fields = fields
+    )
+
+    category_list <- list(
+      articles,
+      monographies,
+      chapters
+      )
+
+    return(
+      purrr::transpose(category_list) %>%
+        purrr::map(
+          dplyr::bind_rows
+          )
+      )
+  }
+
   # API call to Cristin
   base_data <- httr::GET(
     url = "https://api.cristin.no/v2/results?",
@@ -172,7 +257,7 @@ get_cristin_results <- function(
           dplyr::bind_rows(.id = "cristin_result_id") %>%
           dplyr::rename(
             "funding_source_project_code" = project_code,
-            "funding_source_name" = funding_source_name.en
+            "funding_source_name" = funding_sources[["funding_source_name.en"]]
             )
 
         data <- append(
@@ -192,7 +277,7 @@ get_cristin_results <- function(
         links <- purrr::compact(links) %>%
           dplyr::bind_rows(.id = "cristin_result_id") %>%
           dplyr::rename(
-            "link_type" = url_type,
+            "link_type" = links[["url_type"]],
             "link_url" = url
             )
 

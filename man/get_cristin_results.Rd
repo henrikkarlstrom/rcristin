@@ -4,43 +4,75 @@
 \alias{get_cristin_results}
 \title{Get Cristin results}
 \usage{
-get_cristin_results(unit = NULL, institution = NULL,
-  contributor = NULL, project_code = NULL, user = NULL,
-  category = NULL, funding_source = NULL, created_since = NULL,
-  created_before = NULL, published_since = NULL,
-  published_before = NULL, per_page = 999, page = 1,
-  fields = "all", simplify = FALSE)
+get_cristin_results(
+  doi = NULL,
+  title = NULL,
+  contributor = NULL,
+  issn = NULL,
+  unit = NULL,
+  institution = NULL,
+  user = NULL,
+  category = NULL,
+  published_since = NULL,
+  published_before = NULL,
+  created_since = NULL,
+  created_before = NULL,
+  modified_since = NULL,
+  modified_before = NULL,
+  year_reported = NULL,
+  project_code = NULL,
+  funding_source = NULL,
+  page = 1,
+  per_page = 999,
+  fields = "all",
+  simplify = FALSE,
+  NVI = FALSE
+)
 }
 \arguments{
-\item{unit}{string}
+\item{doi}{string}
 
-\item{institution}{string}
+\item{title}{string}
 
 \item{contributor}{string}
 
-\item{project_code}{string}
+\item{issn}{string}
+
+\item{unit}{string}
+
+\item{institution}{string}
 
 \item{user}{string}
 
 \item{category}{string}
 
-\item{funding_source}{string}
+\item{published_since}{string}
+
+\item{published_before}{string}
 
 \item{created_since}{string}
 
 \item{created_before}{string}
 
-\item{published_since}{string}
+\item{modified_since}{string}
 
-\item{published_before}{string}
+\item{modified_before}{string}
 
-\item{per_page}{string}
+\item{year_reported}{string}
 
-\item{page}{string}
+\item{project_code}{string}
+
+\item{funding_source}{string}
+
+\item{page}{integer}
+
+\item{per_page}{integer}
 
 \item{fields}{string}
 
-\item{simplify}{string}
+\item{simplify}{logical}
+
+\item{NVI}{logical}
 }
 \value{
 data frame
