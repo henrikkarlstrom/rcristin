@@ -8,8 +8,7 @@ Authors@R:
            email = "henrik.karlstrom@ntnu.ntnu",
            comment = c(ORCID = "0000-0002-9942-4326"))
 Description: rcristin gets results from the Norwegian academic publication
-  database Cristin and returns them as a data frame formatted according to analysis
-  parameters provided.
+  database Cristin and returns them as a data frame.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

@@ -1,23 +1,28 @@
+---
+output: github_document
+---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
 
 # rcristin
 
 <!-- badges: start -->
-
 <!-- badges: end -->
 
-rcristin is a simple R interface to query the [API for the Cristin
-database](https://api.cristin.no/v2/doc/index.html) for Cristin results,
-with error handling and automatic pagination. It (currently) consists of
-two functions: one for retrieving registered Cristin results and one for
-their associated author affiliation information. Both functions always
-return a data frame.
+rcristin is a simple R interface to query the [API for the Cristin database](https://api.cristin.no/v2/doc/index.html) for Cristin results, with error handling and automatic pagination. It (currently) consists of two functions: one for retrieving registered Cristin results and one for their associated author affiliation information. Both functions always return a data frame.
 
 ## Installation
 
-You can install the development version from
-[GitHub](https://github.com/) with:
+You can install the development version from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
@@ -26,10 +31,9 @@ devtools::install_github("henrikkarlstrom/rcristin")
 
 ## Example
 
-A simple query for academic publications from a unit, which is stored as
-a data frame:
+A simple query for academic publications from a unit, which is stored as a data frame:
 
-``` r
+```{r example}
 library(rcristin)
 ## get Cristin results from NTNU's University Library
 ntnuub <- get_cristin_results(
@@ -38,33 +42,17 @@ ntnuub <- get_cristin_results(
   )
 ```
 
-This can now be used for all sors of bibliometric analyses. Here is a
-table of the ten most common publication categories for the University
-Library of NTNU:
+This can now be used for all sors of bibliometric analyses. Here is a table of the ten most common publication categories for the University Library of NTNU:
 
-``` r
+```{r cars}
 table <- dplyr::count(ntnuub, category_name_en, sort = TRUE)
 
 knitr::kable(head(table, 10), col.names = c("Cristin category", "Number of Cristin posts"))
 ```
 
-| Cristin category                 | Number of Cristin posts |
-| :------------------------------- | ----------------------: |
-| Lecture                          |                      99 |
-| Website (informational material) |                      47 |
-| Academic lecture                 |                      46 |
-| Interview                        |                      41 |
-| Popular scientific lecture       |                      38 |
-| Academic article                 |                      27 |
-| Other presentation               |                      19 |
-| Poster                           |                      17 |
-| Popular scientific article       |                      12 |
-| Museum exhibition                |                      11 |
+And here is a graph of the Open Access status of the academic publications of the library:
 
-And here is a graph of the Open Access status of the academic
-publications of the library:
-
-``` r
+```{r oa_graph}
 # Filtering out the non-academic results
 ntnuub <- ntnuub[ntnuub$category_code %in% c(
   "ACADEMICREVIEW", "ANTHOLOGYACA", "ARTICLE",
@@ -113,4 +101,3 @@ ggplot2::ggplot(
     )
 ```
 
-<img src="man/figures/README-oa_graph-1.png" width="100%" />
