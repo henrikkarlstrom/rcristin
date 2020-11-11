@@ -18,7 +18,6 @@ Get data on publication authors
 \examples{
 get_contributor_info(data.frame(
 cristin_result_id = 1094009,
-contributors.url = "https://api.cristin.no/v2/results/1094009/contributors",
-stringsAsFactors = FALSE)
+contributors_url = "https://api.cristin.no/v2/results/1094009/contributors")
 )
 }

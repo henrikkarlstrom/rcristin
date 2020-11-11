@@ -168,7 +168,7 @@ get_cristin_results <- function(
     stop(
       paste(
         "Query failed with status",
-        httr::http_status(post_query)[["message"]]
+        httr::http_status(base_data)[["message"]]
       )
     )
   } else if(base_data[["headers"]][["x-total-count"]] == 0){
@@ -241,11 +241,11 @@ get_cristin_results <- function(
            dplyr::starts_with("summary_"))
         ) %>%
       dplyr::select(
-        cristin_result_id,
-        result_url = url,
-        title,
-        date_published,
-        year_published,
+        "cristin_result_id",
+        "result_url" = "url",
+        "title",
+        "date_published",
+        "year_published",
         dplyr::everything()
         )
 

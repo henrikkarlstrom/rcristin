@@ -28,11 +28,11 @@ rcristin provides two functions to facilitate easy querying of the Cristin datab
 
 With these two functions and some basic data handling you can answer many common questions about the reported results of an institution, a particular research project or an academic journal, to name a few of the options available.
 
-First, we load rcristin. We also load in the tidyverse for easy data exploration:
+First, we load rcristin. We also load in the dplyr package from the tidyverse for easy data exploration:
 
 ```{r, message = FALSE}
 library(rcristin)
-library(tidyverse)
+library(dplyr)
 ```
 
 ## `get_cristin_results()`

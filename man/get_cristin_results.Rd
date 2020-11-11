@@ -21,11 +21,11 @@ get_cristin_results(
   modified_before = NULL,
   year_reported = NULL,
   project_code = NULL,
+  funding = NULL,
   funding_source = NULL,
   page = 1,
   per_page = 999,
   fields = "all",
-  simplify = FALSE,
   NVI = FALSE
 )
 }
@@ -62,6 +62,8 @@ get_cristin_results(
 
 \item{project_code}{string}
 
+\item{funding}{string}
+
 \item{funding_source}{string}
 
 \item{page}{integer}
@@ -69,8 +71,6 @@ get_cristin_results(
 \item{per_page}{integer}
 
 \item{fields}{string}
-
-\item{simplify}{logical}
 
 \item{NVI}{logical}
 }

@@ -8,8 +8,7 @@
 #' @examples
 #' get_contributor_info(data.frame(
 #' cristin_result_id = 1094009,
-#' contributors.url = "https://api.cristin.no/v2/results/1094009/contributors",
-#' stringsAsFactors = FALSE)
+#' contributors_url = "https://api.cristin.no/v2/results/1094009/contributors")
 #' )
 get_contributor_info <- function(base_data){
 
@@ -41,31 +40,31 @@ get_contributor_info <- function(base_data){
 contributors <- contributors %>%
   dplyr::bind_rows() %>%
   dplyr::rename(
-    "contributor_url" = url,
-    "cristin_result_id" = result_id
+    "contributor_url" = "url",
+    "cristin_result_id" = "result_id"
     ) %>%
   tidyr::unnest(
-    cols = c(affiliations),
+    cols = c("affiliations"),
     keep_empty = TRUE
     ) %>%
-  mutate(
-    unit_name = coalesce(
-      !!!select(., contains("unit_name")))
+  dplyr::mutate(
+    unit_name = dplyr::coalesce(
+      !!!dplyr::select(., dplyr::contains("unit_name")))
     ) %>%
   dplyr::select(
-    cristin_result_id,
-    cristin_person_id,
-    first_name,
-    surname,
-    author_order = order,
-    role_code,
-    role_name = role.name.en,
-    cristin_institution_id = institution.cristin_institution_id,
-    institution_url = institution.url,
-    cristin_unit_id = unit.cristin_unit_id,
-    unit_url = unit.url,
-    unit_name,
-    contributor_url
+    "cristin_result_id",
+    "cristin_person_id",
+    "first_name",
+    "surname",
+    "author_order" = "order",
+    "role_code",
+    "role_name" = "role.name.en",
+    "cristin_institution_id" = "institution.cristin_institution_id",
+    "institution_url" = "institution.url",
+    "cristin_unit_id" = "unit.cristin_unit_id",
+    "unit_url" = "unit.url",
+    "unit_name",
+    "contributor_url"
     )
 
   return(contributors)
