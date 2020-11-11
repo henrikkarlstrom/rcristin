@@ -1,0 +1,123 @@
+---
+title: "Example of rcristin use"
+description: >
+  The Cristin database of research and science communication results is a great source of data concerning the activities of academic institutions in Norway. This vignette gives you an example of how to use the rcristin package to extract data about the academic publishing of an institution for a common type of analysis: co-publication trends.
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Example of rcristin use}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+options(
+  tibble.print_min = 5L, 
+  tibble.print_max = 5L
+  )
+```
+
+rcristin provides two functions to facilitate easy querying of the Cristin database through [its REST API](https://api.cristin.no/). This vignette shows you how to:
+
+* Use `get_cristin_results()` to get the registered results of a research institution, unit or individual researcher.
+
+* Use `get_contributor_info()` to extract further information about the institutional affiliations of the contributors to the results you extracted in the last step.
+
+With these two functions and some basic data handling you can answer many common questions about the reported results of an institution, a particular research project or an academic journal, to name a few of the options available.
+
+First, we load rcristin. We also load in the tidyverse for easy data exploration:
+
+```{r, message = FALSE}
+library(rcristin)
+library(tidyverse)
+```
+
+## `get_cristin_results()`
+
+The most important function of rcristin is `get_cristin_results()`: it allows you to specify search terms that will (hopefully) return meaningful results from the database.
+
+Basically, you pass the function one or several arguments that correspond to the [search parameters of the API specification](https://api.cristin.no/v2/doc/index.html#GETresults), for example `institution` or `year_reported`. For this example, we will fetch all results reported by the [Centre for Sami Studies](https://en.uit.no/enhet/sesam?p_dimension_id=88182) at UiT - The Arctic University of Norway since 2015.
+
+First, we need to establish the search parameters. In this case we want results for a particular unit that belongs to an institution, but we don't want to download all results for the whole institution. We need to specify the `unit` parameter, as well as `published_since`.
+
+UiT has the institutional ID of 186 in the Cristin base, and a look at the [units list for this institution](https://api.cristin.no/v2/units?institution=186) we can see that SESAM has the unit ID of 186.33.85.0.
+
+The call to `get_cristin_results()` looks as follows:
+
+```{r fetch}
+sesam_results <- get_cristin_results(
+  unit = "186.33.85.0",
+  published_since = 2015
+  )
+```
+
+This yields a tibble with `r nrow(sesam_results)` results, with a lot of metadata contained in the columns:
+
+```{r print_whole}
+sesam_results
+```
+
+This can be summarised in various ways. For example, by counting the number of results per year:
+
+```{r results_per_year, message = FALSE}
+sesam_results %>% 
+  count(year_published)
+```
+
+Looks like a pretty stable output over time. What are the types of results?
+
+```{r results_type}
+sesam_results %>% 
+  count(category_name_en, sort = TRUE)
+```
+A lot of communication work in the form of lectures, but also chapters in books and academic articles.
+
+
+## `get_contributor_info()`
+
+This function takes in a data frame or tibble, looks for 
+
+We want to see which institutions SESAM publish together with. First, we filter out anything that is not a peer-reviewed publication results from `sesam_results`:
+
+```{r filter}
+sesam_pubs <- sesam_results %>%
+  filter(
+    category_code %in% c(
+      "CHAPTERACADEMIC", "ARTICLE",
+      "ANTHOLOGYACA", "COMMENTARYACA"
+      )
+    )
+```
+
+Then, we simply pass the whole tibble to `get_contributor_info()`:
+
+```{r sesam_contribs}
+sesam_contributors <- get_contributor_info(sesam_pubs)
+```
+
+The `r nrow(sesam_pubs)` publications has a total of `r nrow(sesam_contributors)` affiliated contributors. How many publications have authors from other institutions?
+
+```{r copublishing}
+sesam_copublishers <- sesam_contributors %>%
+  filter(
+    cristin_institution_id != 186
+    )
+```
+
+There are `r nrow(sesam_copublishers %>% distinct(cristin_result_id))` publications with authors from outside SESAM, but some of these have many co-authors from other institutions.
+
+```{r}
+sesam_copublishers %>%
+  count(unit_name, sort = TRUE)
+```
+Not all the affiliations have informative unit names ("Sweden", "New Zealand", "Administrasjon"), but it is clear that the researchers of SESAM are just as liable to co-publish internationally as with other Norwegian universities.
+
+
+## Good practice in API querying
+
+rcristin is great for exploring the contents of the Cristin database. Often, you will find yourself trying out different combinations of queries to get the data you are interested in. This is essential to get a better understanding of what data is available.
+
+However, it also helps to remember that every call to the Cristin API results in a lookup in a database somewhere, and the transfer of data from a server to your computer. While Cristin is not a huge database, and the maintainers have plenty of processing capacity, it is good practice to avoid unnecessarily large or redundant API calls. Try to specify as many parameters as you can in the queries, and if you are trying out multiple queries in succession (for example looping through a long list of parameter combinations) always remember to test it out on a smaller subset of those queries before running the full process. This will help you catch any errors or tune the parameters to reduce the amount of data transferred.
