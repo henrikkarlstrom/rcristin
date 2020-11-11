@@ -5,6 +5,8 @@
 
 <!-- badges: start -->
 
+[![Travis build
+status](https://travis-ci.com/henrikkarlstrom/rcristin.svg?branch=master)](https://travis-ci.com/henrikkarlstrom/rcristin)
 <!-- badges: end -->
 
 rcristin is a simple R interface to query the [API for the Cristin
