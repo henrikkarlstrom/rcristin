@@ -39,7 +39,7 @@ library(dplyr)
 
 The most important function of rcristin is `get_cristin_results()`: it allows you to specify search terms that will (hopefully) return meaningful results from the database.
 
-Basically, you pass the function one or several arguments that correspond to the [search parameters of the API specification](https://api.cristin.no/v2/doc/index.html#GETresults), for example `institution` or `year_reported`. For this example, we will fetch all results reported by the [Centre for Sami Studies](https://en.uit.no/enhet/sesam?p_dimension_id=88182) at UiT - The Arctic University of Norway since 2015.
+Basically, you pass the function one or several arguments that correspond to the [search parameters of the API specification](https://api.cristin.no/v2/doc/index.html#GETresults), for example `institution` or `year_reported`. For this example, we will fetch all results reported by the [Centre for Sami Studies](https://en.uit.no/enhet/sesam?p_dimension_id=88182) (SESAM) at UiT - The Arctic University of Norway since 2015.
 
 First, we need to establish the search parameters. In this case we want results for a particular unit that belongs to an institution, but we don't want to download all results for the whole institution. We need to specify the `unit` parameter, as well as `published_since`.
 
@@ -78,9 +78,9 @@ A lot of communication work in the form of lectures, but also chapters in books 
 
 ## `get_contributor_info()`
 
-This function takes in a data frame or tibble, looks for 
+This function takes in a data frame of Cristin results retrieved using `get_cristin_results()`, looks up the contributor information for each result in that data frame, and returns a data frame with author and affilation data for each Cristin result ID, which can then be joined to the original data frame using the result ID or analysed as is.
 
-We want to see which institutions SESAM publish together with. First, we filter out anything that is not a peer-reviewed publication results from `sesam_results`:
+Continuing with our example, we want to see which institutions SESAM publish together with. First, we filter out anything that is not a peer-reviewed publication results from `sesam_results`:
 
 ```{r filter}
 sesam_pubs <- sesam_results %>%

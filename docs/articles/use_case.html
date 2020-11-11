@@ -60,7 +60,14 @@
   </ul>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/henrikkarlstrom/rcristin/">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -77,7 +84,7 @@
       <h1 data-toc-skip>Example of rcristin use</h1>
             
       
-      
+      <small class="dont-index">Source: <a href="https://github.com/henrikkarlstrom/rcristin/blob/master/vignettes/use_case.Rmd"><code>vignettes/use_case.Rmd</code></a></small>
       <div class="hidden name"><code>use_case.Rmd</code></div>
 
     </div>
@@ -99,7 +106,7 @@
 <a href="#get_cristin_results" class="anchor"></a><code>get_cristin_results()</code>
 </h2>
 <p>The most important function of rcristin is <code><a href="../reference/get_cristin_results.html">get_cristin_results()</a></code>: it allows you to specify search terms that will (hopefully) return meaningful results from the database.</p>
-<p>Basically, you pass the function one or several arguments that correspond to the <a href="https://api.cristin.no/v2/doc/index.html#GETresults">search parameters of the API specification</a>, for example <code>institution</code> or <code>year_reported</code>. For this example, we will fetch all results reported by the <a href="https://en.uit.no/enhet/sesam?p_dimension_id=88182">Centre for Sami Studies</a> at UiT - The Arctic University of Norway since 2015.</p>
+<p>Basically, you pass the function one or several arguments that correspond to the <a href="https://api.cristin.no/v2/doc/index.html#GETresults">search parameters of the API specification</a>, for example <code>institution</code> or <code>year_reported</code>. For this example, we will fetch all results reported by the <a href="https://en.uit.no/enhet/sesam?p_dimension_id=88182">Centre for Sami Studies</a> (SESAM) at UiT - The Arctic University of Norway since 2015.</p>
 <p>First, we need to establish the search parameters. In this case we want results for a particular unit that belongs to an institution, but we don’t want to download all results for the whole institution. We need to specify the <code>unit</code> parameter, as well as <code>published_since</code>.</p>
 <p>UiT has the institutional ID of 186 in the Cristin base, and a look at the <a href="https://api.cristin.no/v2/units?institution=186">units list for this institution</a> we can see that SESAM has the unit ID of 186.33.85.0.</p>
 <p>The call to <code><a href="../reference/get_cristin_results.html">get_cristin_results()</a></code> looks as follows:</p>
@@ -167,8 +174,8 @@
 <h2 class="hasAnchor">
 <a href="#get_contributor_info" class="anchor"></a><code>get_contributor_info()</code>
 </h2>
-<p>This function takes in a data frame or tibble, looks for</p>
-<p>We want to see which institutions SESAM publish together with. First, we filter out anything that is not a peer-reviewed publication results from <code>sesam_results</code>:</p>
+<p>This function takes in a data frame of Cristin results retrieved using <code><a href="../reference/get_cristin_results.html">get_cristin_results()</a></code>, looks up the contributor information for each result in that data frame, and returns a data frame with author and affilation data for each Cristin result ID, which can then be joined to the original data frame using the result ID or analysed as is.</p>
+<p>Continuing with our example, we want to see which institutions SESAM publish together with. First, we filter out anything that is not a peer-reviewed publication results from <code>sesam_results</code>:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sesam_pubs</span> <span class="op">&lt;-</span> <span class="va">sesam_results</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span>

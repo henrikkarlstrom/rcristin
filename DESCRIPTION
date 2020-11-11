@@ -1,5 +1,6 @@
 Package: rcristin
 Title: Get Cristin results from the Cristin API
+URL: https://github.com/henrikkarlstrom/rcristin, https://henrikkarlstrom.github.io/rcristin/
 Version: 0.1.0
 Authors@R: 
     person(given = "Henrik",

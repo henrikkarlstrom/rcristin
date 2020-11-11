@@ -11,10 +11,12 @@ status](https://travis-ci.com/henrikkarlstrom/rcristin.svg?branch=master)](https
 
 rcristin is a simple R interface to query the [API for the Cristin
 database](https://api.cristin.no/v2/doc/index.html) for Cristin results,
-with error handling and automatic pagination. It (currently) consists of
-two functions: one for retrieving registered Cristin results and one for
-their associated author affiliation information. Both functions always
-return a data frame.
+with error handling and automatic pagination. See full documentation of
+the package at <https://henrikkarlstrom.github.io/rcristin/index.html>.
+
+rcristin (currently) consists of two functions: one for retrieving
+registered Cristin results and one for their associated author
+affiliation information. Both functions always return a data frame.
 
 ## Installation
 
