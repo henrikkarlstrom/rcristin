@@ -186,18 +186,14 @@ get_cristin_results <- function(
         flatten = TRUE
         )
       ) %>%
-      tidyr::pivot_longer(
-        cols = dplyr::starts_with("title"),
-        names_to = "title_language",
-        values_to = "title",
-        values_drop_na = TRUE
-        ) %>%
-      tidyr::pivot_longer(
-        cols = dplyr::starts_with("summary"),
-        names_to = "summary_language",
-        values_to = "summary"
-        ) %>%
-      dplyr::distinct(cristin_result_id, .keep_all = TRUE)
+      dplyr::mutate(
+        title = dplyr::coalesce(
+          !!!dplyr::select(., dplyr::starts_with("title"))
+          ),
+        summary = dplyr::coalesce(
+          !!!dplyr::select(., dplyr::starts_with("summary"))
+          )
+        )
 
     # fetch the rest of the results from the API call
     if(!is.null(paging)) {
@@ -219,18 +215,14 @@ get_cristin_results <- function(
             flatten = TRUE
             )
           ) %>%
-          tidyr::pivot_longer(
-            cols = dplyr::starts_with("title"),
-            names_to = "title_language",
-            values_to = "title",
-            values_drop_na = TRUE
-          ) %>%
-          tidyr::pivot_longer(
-            cols = dplyr::starts_with("summary"),
-            names_to = "summary_language",
-            values_to = "summary"
-          ) %>%
-          dplyr::distinct(cristin_result_id, .keep_all = TRUE)
+          dplyr::mutate(
+            title = dplyr::coalesce(
+              !!!dplyr::select(., dplyr::starts_with("title"))
+            ),
+            summary = dplyr::coalesce(
+              !!!dplyr::select(., dplyr::starts_with("summary"))
+            )
+          )
 
         base_data <- dplyr::bind_rows(
           base_data,
@@ -240,21 +232,20 @@ get_cristin_results <- function(
       }
     }
 
-    # clean up title and summary language columns
-    base_data[["title_language"]] <- gsub(
-      "title.",
-      "",
-      base_data[["title_language"]]
-      )
-
-    base_data[["summary_language"]] <- gsub(
-      "summary.",
-      "",
-      base_data[["summary_language"]]
-    )
-
     # clean up column names
     names(base_data) <- gsub("\\.", "_", names(base_data))
+
+    base_data <- base_data %>%
+      select(-c(starts_with("title_"), starts_with("summary_"))) %>%
+      select(
+        cristin_result_id,
+        result_url = url,
+        title,
+        date_published,
+        year_published,
+        everything()
+        )
+
 
     return(base_data)
 

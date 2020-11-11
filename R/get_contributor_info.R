@@ -13,17 +13,19 @@
 #' )
 get_contributor_info <- function(base_data){
 
+  if(!"contributors_url" %in% names(base_data)){
+    stop("There is no column called contributors_url here")
+  }
+
   base_data <- dplyr::filter(
     base_data,
-    !is.na(base_data[["contributors.url"]])
+    !is.na(base_data[["contributors_url"]])
     )
 
   contributors <- lapply(
-    unique(base_data[["contributors.url"]]),
+    unique(base_data[["contributors_url"]]),
     httr::GET
     )
-
-  names(contributors) <- unique(base_data[["cristin_result_id"]])
 
   contributors <- lapply(
     contributors,
@@ -32,15 +34,39 @@ get_contributor_info <- function(base_data){
         jsonlite::fromJSON(
           httr::content(x, "text"),
           flatten = TRUE)
-          ) %>%
-      dplyr::bind_rows(.id = "cristin_result_id") %>%
-      dplyr::rename("contributor_url" = url) %>%
-      tidyr::unnest(
-        cols = c(base_data[["affiliations"]]),
-        keep_empty = TRUE
         )
-  })
+      }
+    )
 
+contributors <- contributors %>%
+  dplyr::bind_rows() %>%
+  dplyr::rename(
+    "contributor_url" = url,
+    "cristin_result_id" = result_id
+    ) %>%
+  tidyr::unnest(
+    cols = c(affiliations),
+    keep_empty = TRUE
+    ) %>%
+  mutate(
+    unit_name = coalesce(
+      !!!select(., contains("unit_name")))
+    ) %>%
+  dplyr::select(
+    cristin_result_id,
+    cristin_person_id,
+    first_name,
+    surname,
+    author_order = order,
+    role_code,
+    role_name = role.name.en,
+    cristin_institution_id = institution.cristin_institution_id,
+    institution_url = institution.url,
+    cristin_unit_id = unit.cristin_unit_id,
+    unit_url = unit.url,
+    unit_name,
+    contributor_url
+    )
 
   return(contributors)
 }
