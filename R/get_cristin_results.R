@@ -236,14 +236,17 @@ get_cristin_results <- function(
     names(base_data) <- gsub("\\.", "_", names(base_data))
 
     base_data <- base_data %>%
-      select(-c(starts_with("title_"), starts_with("summary_"))) %>%
-      select(
+      dplyr::select(
+        -c(dplyr::starts_with("title_"),
+           dplyr::starts_with("summary_"))
+        ) %>%
+      dplyr::select(
         cristin_result_id,
         result_url = url,
         title,
         date_published,
         year_published,
-        everything()
+        dplyr::everything()
         )
 
 
