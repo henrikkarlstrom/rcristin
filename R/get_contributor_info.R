@@ -36,22 +36,28 @@ get_contributor_info <- function(base_data){
         )
       }
     )
+  contributors <- dplyr::bind_rows(contributors)
 
-contributors <- contributors %>%
-  dplyr::bind_rows() %>%
-  dplyr::rename(
+  contributors <- dplyr::rename(
+    contributors,
     "contributor_url" = "url",
     "cristin_result_id" = "result_id"
-    ) %>%
-  tidyr::unnest(
+    )
+
+  contributors <- tidyr::unnest(
+    contributors,
     cols = c("affiliations"),
     keep_empty = TRUE
-    ) %>%
-  dplyr::mutate(
+    )
+
+  contributors <- dplyr::mutate(
+    contributors,
     unit_name = dplyr::coalesce(
-      !!!dplyr::select(., dplyr::contains("unit_name")))
-    ) %>%
-  dplyr::select(
+      !!!dplyr::select(contributors, dplyr::contains("unit_name")))
+    )
+
+  contributors <- dplyr::select(
+    contributors,
     "cristin_result_id",
     "cristin_person_id",
     "first_name",
