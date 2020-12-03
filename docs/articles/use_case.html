@@ -39,12 +39,6 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -77,8 +71,7 @@
 
       
 
-      </header><script src="use_case_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="use_case_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
-<script src="use_case_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
+      </header><script src="use_case_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Example of rcristin use</h1>
@@ -99,7 +92,7 @@
 <p>With these two functions and some basic data handling you can answer many common questions about the reported results of an institution, a particular research project or an academic journal, to name a few of the options available.</p>
 <p>First, we load rcristin. We also load in the dplyr package from the tidyverse for easy data exploration:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">rcristin</span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/henrikkarlstrom/rcristin">rcristin</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></code></pre></div>
 <div id="get_cristin_results" class="section level2">
 <h2 class="hasAnchor">
@@ -115,33 +108,38 @@
   unit <span class="op">=</span> <span class="st">"186.33.85.0"</span>,
   published_since <span class="op">=</span> <span class="fl">2015</span>
   <span class="op">)</span></code></pre></div>
-<p>This yields a tibble with 347 results, with a lot of metadata contained in the columns:</p>
+<p>This yields a tibble with 362 results, with a lot of metadata contained in the columns:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sesam_results</span>
-<span class="co">#&gt; # A tibble: 347 x 47</span>
-<span class="co">#&gt;   cristin_result_~ result_url title date_published year_published</span>
-<span class="co">#&gt;   &lt;chr&gt;            &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt;          &lt;chr&gt;         </span>
-<span class="co">#&gt; 1 1650773          https://a~ "Bet~ &lt;NA&gt;           2018          </span>
-<span class="co">#&gt; 2 1650765          https://a~ "Sam~ 2018-12-18T00~ 2018          </span>
-<span class="co">#&gt; 3 1709062          https://a~ "Hvo~ &lt;NA&gt;           2019          </span>
-<span class="co">#&gt; 4 1711231          https://a~ "How~ 2019-07-10T00~ 2019          </span>
-<span class="co">#&gt; 5 1681441          https://a~ "Læs~ 2019-02-22T00~ 2019          </span>
-<span class="co">#&gt; # ... with 342 more rows, and 42 more variables: funding_sources &lt;list&gt;,</span>
-<span class="co">#&gt; #   open_access &lt;chr&gt;, original_language &lt;chr&gt;, organiser &lt;chr&gt;, links &lt;list&gt;,</span>
+<span class="co">#&gt; # A tibble: 362 x 56</span>
+<span class="co">#&gt;   cristin_result_~ result_url category_code title year_published date_published</span>
+<span class="co">#&gt;   &lt;chr&gt;            &lt;chr&gt;      &lt;chr&gt;         &lt;chr&gt; &lt;chr&gt;          &lt;chr&gt;         </span>
+<span class="co">#&gt; 1 1214492          https://a~ MEDIAINTERVI~ "GEN~ 2015           2015-01-23T00~</span>
+<span class="co">#&gt; 2 1210116          https://a~ ANTHOLOGYACA  "Sav~ 2017           &lt;NA&gt;          </span>
+<span class="co">#&gt; 3 1229676          https://a~ READEROPINION "Hva~ 2015           2015-03-03T00~</span>
+<span class="co">#&gt; 4 1258447          https://a~ ARTICLE       "Hun~ 2015           &lt;NA&gt;          </span>
+<span class="co">#&gt; 5 1261075          https://a~ ARTICLE       "\"S~ 2015           &lt;NA&gt;          </span>
+<span class="co">#&gt; # ... with 357 more rows, and 50 more variables: links &lt;list&gt;,</span>
+<span class="co">#&gt; #   open_access &lt;chr&gt;, original_language &lt;chr&gt;, issue &lt;chr&gt;,</span>
 <span class="co">#&gt; #   number_of_pages &lt;chr&gt;, international_standard_numbers &lt;list&gt;,</span>
-<span class="co">#&gt; #   year_online &lt;chr&gt;, year_printed &lt;chr&gt;, year_reported &lt;chr&gt;,</span>
-<span class="co">#&gt; #   import_sources &lt;list&gt;, volume &lt;chr&gt;, issue &lt;chr&gt;, projects &lt;list&gt;,</span>
-<span class="co">#&gt; #   category_code &lt;chr&gt;, category_name_en &lt;chr&gt;, contributors_url &lt;chr&gt;,</span>
-<span class="co">#&gt; #   created_date &lt;chr&gt;, last_modified_date &lt;chr&gt;, event_name &lt;chr&gt;,</span>
-<span class="co">#&gt; #   event_location &lt;chr&gt;, event_date_from &lt;chr&gt;, event_date_to &lt;chr&gt;,</span>
-<span class="co">#&gt; #   event_arranged_by_name &lt;chr&gt;, channel_title &lt;chr&gt;, publisher_name &lt;chr&gt;,</span>
-<span class="co">#&gt; #   publisher_url &lt;chr&gt;, publisher_place &lt;chr&gt;, chapters_url &lt;chr&gt;,</span>
-<span class="co">#&gt; #   classification_scientific_disciplines &lt;list&gt;,</span>
-<span class="co">#&gt; #   classification_keywords &lt;list&gt;, journal_name &lt;chr&gt;,</span>
+<span class="co">#&gt; #   year_printed &lt;chr&gt;, year_reported &lt;chr&gt;, year_online &lt;chr&gt;, volume &lt;chr&gt;,</span>
+<span class="co">#&gt; #   organiser &lt;chr&gt;, funding_sources &lt;list&gt;, projects &lt;list&gt;,</span>
+<span class="co">#&gt; #   import_sources &lt;list&gt;, category_name_en &lt;chr&gt;, contributors_url &lt;chr&gt;,</span>
+<span class="co">#&gt; #   contributors_count &lt;int&gt;, contributors_preview &lt;list&gt;, created_date &lt;chr&gt;,</span>
+<span class="co">#&gt; #   last_modified_date &lt;chr&gt;, channel_title &lt;chr&gt;,</span>
+<span class="co">#&gt; #   publisher_cristin_publisher_id &lt;chr&gt;, publisher_name &lt;chr&gt;,</span>
+<span class="co">#&gt; #   publisher_url &lt;chr&gt;, publisher_place &lt;chr&gt;,</span>
+<span class="co">#&gt; #   series_cristin_journal_id &lt;chr&gt;, series_name &lt;chr&gt;,</span>
+<span class="co">#&gt; #   series_international_standard_numbers &lt;list&gt;, series_nvi_level &lt;chr&gt;,</span>
+<span class="co">#&gt; #   chapters_url &lt;chr&gt;, journal_cristin_journal_id &lt;chr&gt;, journal_name &lt;chr&gt;,</span>
 <span class="co">#&gt; #   journal_international_standard_numbers &lt;list&gt;, journal_nvi_level &lt;chr&gt;,</span>
-<span class="co">#&gt; #   journal_publisher_name &lt;chr&gt;, journal_publisher_url &lt;chr&gt;,</span>
-<span class="co">#&gt; #   journal_publisher_place &lt;chr&gt;, part_of_url &lt;chr&gt;, pages_from &lt;chr&gt;,</span>
-<span class="co">#&gt; #   pages_to &lt;chr&gt;, pages_count &lt;chr&gt;, summary &lt;chr&gt;</span></code></pre></div>
+<span class="co">#&gt; #   journal_publisher_cristin_publisher_id &lt;chr&gt;, journal_publisher_name &lt;chr&gt;,</span>
+<span class="co">#&gt; #   journal_publisher_place &lt;chr&gt;, journal_publisher_url &lt;chr&gt;,</span>
+<span class="co">#&gt; #   pages_from &lt;chr&gt;, pages_to &lt;chr&gt;, pages_count &lt;chr&gt;, event_name &lt;chr&gt;,</span>
+<span class="co">#&gt; #   event_location &lt;chr&gt;, event_date_from &lt;chr&gt;, event_date_to &lt;chr&gt;,</span>
+<span class="co">#&gt; #   event_arranged_by_name &lt;chr&gt;, part_of_url &lt;chr&gt;,</span>
+<span class="co">#&gt; #   classification_scientific_disciplines &lt;list&gt;,</span>
+<span class="co">#&gt; #   classification_keywords &lt;list&gt;, summary &lt;chr&gt;</span></code></pre></div>
 <p>This can be summarised in various ways. For example, by counting the number of results per year:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sesam_results</span> <span class="op">%&gt;%</span> 
@@ -153,7 +151,7 @@
 <span class="co">#&gt; 2 2016              63</span>
 <span class="co">#&gt; 3 2017              67</span>
 <span class="co">#&gt; 4 2018              53</span>
-<span class="co">#&gt; 5 2019              63</span>
+<span class="co">#&gt; 5 2019              64</span>
 <span class="co">#&gt; # ... with 1 more row</span></code></pre></div>
 <p>Looks like a pretty stable output over time. What are the types of results?</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -162,11 +160,11 @@
 <span class="co">#&gt; # A tibble: 33 x 2</span>
 <span class="co">#&gt;   category_name_en                              n</span>
 <span class="co">#&gt;   &lt;chr&gt;                                     &lt;int&gt;</span>
-<span class="co">#&gt; 1 Academic lecture                             71</span>
-<span class="co">#&gt; 2 Lecture                                      64</span>
-<span class="co">#&gt; 3 Academic chapter/article/Conference paper    39</span>
-<span class="co">#&gt; 4 Academic article                             37</span>
-<span class="co">#&gt; 5 Interview                                    32</span>
+<span class="co">#&gt; 1 Academic lecture                             73</span>
+<span class="co">#&gt; 2 Lecture                                      69</span>
+<span class="co">#&gt; 3 Academic article                             39</span>
+<span class="co">#&gt; 4 Academic chapter/article/Conference paper    39</span>
+<span class="co">#&gt; 5 Interview                                    36</span>
 <span class="co">#&gt; # ... with 28 more rows</span></code></pre></div>
 <p>A lot of communication work in the form of lectures, but also chapters in books and academic articles.</p>
 </div>
@@ -187,13 +185,13 @@
 <p>Then, we simply pass the whole tibble to <code><a href="../reference/get_contributor_info.html">get_contributor_info()</a></code>:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sesam_contributors</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_contributor_info.html">get_contributor_info</a></span><span class="op">(</span><span class="va">sesam_pubs</span><span class="op">)</span></code></pre></div>
-<p>The 85 publications has a total of 230 affiliated contributors. How many publications have authors from other institutions?</p>
+<p>The 87 publications has a total of 241 affiliated contributors. How many publications have authors from other institutions?</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sesam_copublishers</span> <span class="op">&lt;-</span> <span class="va">sesam_contributors</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span>
     <span class="va">cristin_institution_id</span> <span class="op">!=</span> <span class="fl">186</span>
     <span class="op">)</span></code></pre></div>
-<p>There are 28 publications with authors from outside SESAM, but some of these have many co-authors from other institutions.</p>
+<p>There are 30 publications with authors from outside SESAM, but some of these have many co-authors from other institutions.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sesam_copublishers</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">count</a></span><span class="op">(</span><span class="va">unit_name</span>, sort <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
@@ -202,9 +200,9 @@
 <span class="co">#&gt;   &lt;chr&gt;                               &lt;int&gt;</span>
 <span class="co">#&gt; 1 Stockholm University                   10</span>
 <span class="co">#&gt; 2 Sámi University of Applied Sciences     9</span>
-<span class="co">#&gt; 3 NORCE Samfunn                           7</span>
-<span class="co">#&gt; 4 Russian Academy of Sciences             7</span>
-<span class="co">#&gt; 5 NINA Tromsø                             5</span>
+<span class="co">#&gt; 3 Unknown                                 9</span>
+<span class="co">#&gt; 4 NORCE Samfunn                           7</span>
+<span class="co">#&gt; 5 Russian Academy of Sciences             7</span>
 <span class="co">#&gt; # ... with 35 more rows</span></code></pre></div>
 <p>Not all the affiliations have informative unit names (“Sweden”, “New Zealand”, “Administrasjon”), but it is clear that the researchers of SESAM are just as liable to co-publish internationally as with other Norwegian universities.</p>
 </div>
@@ -231,7 +229,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

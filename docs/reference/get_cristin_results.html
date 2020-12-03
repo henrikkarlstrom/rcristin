@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get Cristin results — get_cristin_results • rcristin</title>
+<title>Get results from the Cristin API — get_cristin_results • rcristin</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,33 @@
 
 
 
-<meta property="og:title" content="Get Cristin results — get_cristin_results" />
-<meta property="og:description" content="Get Cristin results" />
+<meta property="og:title" content="Get results from the Cristin API — get_cristin_results" />
+<meta property="og:description" content="`get_cristin_results()` takes in search parameters for the Cristin API and returns the results as a tibble
+## API parameters
+The Cristin API recognises many search parameters. You can find the latest specification at the Cristin API documentation page. Here are examples of the formatting of these parameters:
+doi DOI name (e.g. doi=10.1000/123456)
+title The title of the result
+contributor Author's name or Cristin person id
+issn The issn of the result
+unit Id (e.g. unit=185.53.18.10)
+institution Id (one number, e.g. institution=185), name or acronym of
+  the institution the contributors belong to
+user A person's username in Cristin together with the institution id
+  separated by ':' 'askeladd:185' means Cristin user 'askeladd' from the
+  institution '185'
+category Result category code, see Cristin category codes for
+  specification
+published_since Results published since and inclusive the given year, (yyyy), e.g: 2005
+published_before Results published before and inclusive the given year, (yyyy), e.g: 2017
+created_since Results created since and inclusive the given date, (yyyy-mm-dd), e.g: 2005-03-17
+created_before Results created before and inclusive the given date, (yyyy-mm-dd), e.g: 2005-03-17
+modified_since Results modified since and inclusive the given date, (yyyy-mm-dd), e.g: 2005-03-17
+modified_before Results modified before and inclusive the given date, (yyyy-mm-dd), e.g: 2005-03-17
+year_reported The year a result was reported
+project_code Project code is the internal reference number used by funding source
+funding_source Funding source code e.g: NFR
+funding Funding source code e.g: NFR, and project_code together separated by ':' 'NFR:1234' means 'funding_source': 'NFR' with 'project_code': '1234'
+lang Two letter language code that determines value of fields such as institution name, one of 'en' (default), 'nb', or 'nn'." />
 
 
 
@@ -79,12 +104,6 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -120,166 +139,105 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get Cristin results</h1>
+    <h1>Get results from the Cristin API</h1>
     <small class="dont-index">Source: <a href='https://github.com/henrikkarlstrom/rcristin/blob/master/R/get_cristin_results.R'><code>R/get_cristin_results.R</code></a></small>
     <div class="hidden name"><code>get_cristin_results.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Get Cristin results</p>
+    <p>`get_cristin_results()` takes in search parameters for the Cristin API and returns the results as a tibble</p>
+<p>## API parameters
+The Cristin API recognises many search parameters. You can find the latest specification at the Cristin API <a href='https://api.cristin.no/v2/'>documentation page</a>. Here are examples of the formatting of these parameters:
+<strong>doi</strong> DOI name (e.g. doi=10.1000/123456)
+<strong>title</strong> The title of the result
+<strong>contributor</strong> Author's name or Cristin person id
+<strong>issn</strong> The issn of the result
+<strong>unit</strong> Id (e.g. unit=185.53.18.10)
+<strong>institution</strong> Id (one number, e.g. institution=185), name or acronym of
+  the institution the contributors belong to
+<strong>user</strong> A person's username in Cristin together with the institution id
+  separated by ':' 'askeladd:185' means Cristin user 'askeladd' from the
+  institution '185'
+<strong>category</strong> Result category code, see <a href='https://api.cristin.no/v2/results/categories?lang=en'>Cristin category codes</a> for
+  specification
+<strong>published_since</strong> Results published since and inclusive the given year, (yyyy), e.g: 2005
+<strong>published_before</strong> Results published before and inclusive the given year, (yyyy), e.g: 2017
+<strong>created_since</strong> Results created since and inclusive the given date, (yyyy-mm-dd), e.g: 2005-03-17
+<strong>created_before</strong> Results created before and inclusive the given date, (yyyy-mm-dd), e.g: 2005-03-17
+<strong>modified_since</strong> Results modified since and inclusive the given date, (yyyy-mm-dd), e.g: 2005-03-17
+<strong>modified_before</strong> Results modified before and inclusive the given date, (yyyy-mm-dd), e.g: 2005-03-17
+<strong>year_reported</strong> The year a result was reported
+<strong>project_code</strong> Project code is the internal reference number used by funding source
+<strong>funding_source</strong> Funding source code e.g: NFR
+<strong>funding</strong> Funding source code e.g: NFR, and project_code together separated by ':' 'NFR:1234' means 'funding_source': 'NFR' with 'project_code': '1234'
+<strong>lang</strong> Two letter language code that determines value of fields such as institution name, one of 'en' (default), 'nb', or 'nn'.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>get_cristin_results</span><span class='op'>(</span>
-  doi <span class='op'>=</span> <span class='cn'>NULL</span>,
-  title <span class='op'>=</span> <span class='cn'>NULL</span>,
-  contributor <span class='op'>=</span> <span class='cn'>NULL</span>,
-  issn <span class='op'>=</span> <span class='cn'>NULL</span>,
-  unit <span class='op'>=</span> <span class='cn'>NULL</span>,
-  institution <span class='op'>=</span> <span class='cn'>NULL</span>,
-  user <span class='op'>=</span> <span class='cn'>NULL</span>,
-  category <span class='op'>=</span> <span class='cn'>NULL</span>,
-  published_since <span class='op'>=</span> <span class='cn'>NULL</span>,
-  published_before <span class='op'>=</span> <span class='cn'>NULL</span>,
-  created_since <span class='op'>=</span> <span class='cn'>NULL</span>,
-  created_before <span class='op'>=</span> <span class='cn'>NULL</span>,
-  modified_since <span class='op'>=</span> <span class='cn'>NULL</span>,
-  modified_before <span class='op'>=</span> <span class='cn'>NULL</span>,
-  year_reported <span class='op'>=</span> <span class='cn'>NULL</span>,
-  project_code <span class='op'>=</span> <span class='cn'>NULL</span>,
-  funding <span class='op'>=</span> <span class='cn'>NULL</span>,
-  funding_source <span class='op'>=</span> <span class='cn'>NULL</span>,
-  page <span class='op'>=</span> <span class='fl'>1</span>,
-  per_page <span class='op'>=</span> <span class='fl'>999</span>,
-  fields <span class='op'>=</span> <span class='st'>"all"</span>,
-  NVI <span class='op'>=</span> <span class='cn'>FALSE</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>get_cristin_results</span><span class='op'>(</span><span class='va'>...</span>, page <span class='op'>=</span> <span class='fl'>1</span>, per_page <span class='op'>=</span> <span class='fl'>999</span>, fields <span class='op'>=</span> <span class='st'>"all"</span>, NVI <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>doi</th>
-      <td><p>string</p></td>
-    </tr>
-    <tr>
-      <th>title</th>
-      <td><p>string</p></td>
-    </tr>
-    <tr>
-      <th>contributor</th>
-      <td><p>string</p></td>
-    </tr>
-    <tr>
-      <th>issn</th>
-      <td><p>string</p></td>
-    </tr>
-    <tr>
-      <th>unit</th>
-      <td><p>string</p></td>
-    </tr>
-    <tr>
-      <th>institution</th>
-      <td><p>string</p></td>
-    </tr>
-    <tr>
-      <th>user</th>
-      <td><p>string</p></td>
-    </tr>
-    <tr>
-      <th>category</th>
-      <td><p>string</p></td>
-    </tr>
-    <tr>
-      <th>published_since</th>
-      <td><p>string</p></td>
-    </tr>
-    <tr>
-      <th>published_before</th>
-      <td><p>string</p></td>
-    </tr>
-    <tr>
-      <th>created_since</th>
-      <td><p>string</p></td>
-    </tr>
-    <tr>
-      <th>created_before</th>
-      <td><p>string</p></td>
-    </tr>
-    <tr>
-      <th>modified_since</th>
-      <td><p>string</p></td>
-    </tr>
-    <tr>
-      <th>modified_before</th>
-      <td><p>string</p></td>
-    </tr>
-    <tr>
-      <th>year_reported</th>
-      <td><p>string</p></td>
-    </tr>
-    <tr>
-      <th>project_code</th>
-      <td><p>string</p></td>
-    </tr>
-    <tr>
-      <th>funding</th>
-      <td><p>string</p></td>
-    </tr>
-    <tr>
-      <th>funding_source</th>
-      <td><p>string</p></td>
+      <th>...</th>
+      <td><p>Arguments to pass on to Cristin API. See 'API parameters' below for more information.</p></td>
     </tr>
     <tr>
       <th>page</th>
-      <td><p>integer</p></td>
+      <td><p>Page number for pagination purposes, set to 1 by default</p></td>
     </tr>
     <tr>
       <th>per_page</th>
-      <td><p>integer</p></td>
+      <td><p>Number of items per page, set to 999 by default</p></td>
     </tr>
     <tr>
       <th>fields</th>
-      <td><p>string</p></td>
+      <td><p>'all' by default, if omitted will return a minimal set of fields</p></td>
     </tr>
     <tr>
       <th>NVI</th>
-      <td><p>logical</p></td>
+      <td><p>Logical determining whether to return only peer-reviewed publications or all results, set to 'FALSE' by default</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>data frame</p>
+    <p>A tibble with results from the API call, with one row per result.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>get_cristin_results</span><span class='op'>(</span>contributor <span class='op'>=</span> <span class='st'>"25062"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 53 x 43</span><span>
-#&gt;    cristin_result_~ result_url title date_published year_published open_access
-#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>            </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>          </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>          </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      
-#&gt; </span><span style='color: #555555;'> 1</span><span> 251539           https://a~ Rene~ </span><span style='color: #BB0000;'>NA</span><span>             2010           none       
-#&gt; </span><span style='color: #555555;'> 2</span><span> 235561           https://a~ Rene~ </span><span style='color: #BB0000;'>NA</span><span>             2008           none       
-#&gt; </span><span style='color: #555555;'> 3</span><span> 243774           https://a~ Cons~ </span><span style='color: #BB0000;'>NA</span><span>             2009           none       
-#&gt; </span><span style='color: #555555;'> 4</span><span> 255746           https://a~ Enac~ </span><span style='color: #BB0000;'>NA</span><span>             2010           none       
-#&gt; </span><span style='color: #555555;'> 5</span><span> 255798           https://a~ Bill~ </span><span style='color: #BB0000;'>NA</span><span>             2010           none       
-#&gt; </span><span style='color: #555555;'> 6</span><span> 254999           https://a~ Unde~ </span><span style='color: #BB0000;'>NA</span><span>             2010           none       
-#&gt; </span><span style='color: #555555;'> 7</span><span> 249116           https://a~ Wher~ </span><span style='color: #BB0000;'>NA</span><span>             2009           none       
-#&gt; </span><span style='color: #555555;'> 8</span><span> 480693           https://a~ Barn~ 2009-04-16T00~ 2009           none       
-#&gt; </span><span style='color: #555555;'> 9</span><span> 786339           https://a~ Wher~ </span><span style='color: #BB0000;'>NA</span><span>             2011           none       
-#&gt; </span><span style='color: #555555;'>10</span><span> 867554           https://a~ The ~ </span><span style='color: #BB0000;'>NA</span><span>             2011           none       
-#&gt; </span><span style='color: #555555;'># ... with 43 more rows, and 37 more variables: original_language </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,</span><span>
-#&gt; </span><span style='color: #555555;'>#   organiser </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, funding_sources </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, links </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>,</span><span>
-#&gt; </span><span style='color: #555555;'>#   number_of_pages </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, international_standard_numbers </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>,</span><span>
-#&gt; </span><span style='color: #555555;'>#   import_sources </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, year_reported </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, year_online </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,</span><span>
-#&gt; </span><span style='color: #555555;'>#   volume </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, issue </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, projects </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, year_printed </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,</span><span>
-#&gt; </span><span style='color: #555555;'>#   category_code </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, category_name_en </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, contributors_url </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,</span><span>
-#&gt; </span><span style='color: #555555;'>#   created_date </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, last_modified_date </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, event_name </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,</span><span>
-#&gt; </span><span style='color: #555555;'>#   event_location </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, event_date_from </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, event_date_to </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,</span><span>
-#&gt; </span><span style='color: #555555;'>#   event_arranged_by_name </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, channel_title </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, journal_name </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,</span><span>
+</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 53 x 53</span><span>
+#&gt;    cristin_result_~ result_url category_code title year_published
+#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>            </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>         </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>         
+#&gt; </span><span style='color: #555555;'> 1</span><span> 235561           https://a~ ACADEMICLECT~ Rene~ 2008          
+#&gt; </span><span style='color: #555555;'> 2</span><span> 243774           https://a~ ACADEMICLECT~ Cons~ 2009          
+#&gt; </span><span style='color: #555555;'> 3</span><span> 249116           https://a~ ACADEMICLECT~ Wher~ 2009          
+#&gt; </span><span style='color: #555555;'> 4</span><span> 254999           https://a~ ACADEMICLECT~ Unde~ 2010          
+#&gt; </span><span style='color: #555555;'> 5</span><span> 255746           https://a~ ACADEMICLECT~ Enac~ 2010          
+#&gt; </span><span style='color: #555555;'> 6</span><span> 255798           https://a~ ACADEMICLECT~ Bill~ 2010          
+#&gt; </span><span style='color: #555555;'> 7</span><span> 251539           https://a~ ACADEMICLECT~ Rene~ 2010          
+#&gt; </span><span style='color: #555555;'> 8</span><span> 1051805          https://a~ ACADEMICLECT~ Towa~ 2013          
+#&gt; </span><span style='color: #555555;'> 9</span><span> 1051810          https://a~ LECTUREPOPUL~ Bør ~ 2013          
+#&gt; </span><span style='color: #555555;'>10</span><span> 1051802          https://a~ ACADEMICLECT~ The ~ 2013          
+#&gt; </span><span style='color: #555555;'># ... with 43 more rows, and 48 more variables: funding_sources </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>,</span><span>
+#&gt; </span><span style='color: #555555;'>#   open_access </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, original_language </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, organiser </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, links </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>,</span><span>
+#&gt; </span><span style='color: #555555;'>#   year_reported </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, import_sources </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, year_online </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,</span><span>
+#&gt; </span><span style='color: #555555;'>#   volume </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, date_published </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, issue </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, number_of_pages </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,</span><span>
+#&gt; </span><span style='color: #555555;'>#   projects </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, international_standard_numbers </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, year_printed </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,</span><span>
+#&gt; </span><span style='color: #555555;'>#   category_name_en </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, contributors_url </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, contributors_count </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span style='color: #555555;'>,</span><span>
+#&gt; </span><span style='color: #555555;'>#   contributors_preview </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, created_date </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, last_modified_date </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,</span><span>
+#&gt; </span><span style='color: #555555;'>#   event_name </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, event_location </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, event_date_from </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,</span><span>
+#&gt; </span><span style='color: #555555;'>#   event_date_to </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, event_arranged_by_name </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, channel_title </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,</span><span>
+#&gt; </span><span style='color: #555555;'>#   part_of_url </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, pages_from </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, pages_to </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, pages_count </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,</span><span>
+#&gt; </span><span style='color: #555555;'>#   journal_cristin_journal_id </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, journal_name </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,</span><span>
 #&gt; </span><span style='color: #555555;'>#   journal_international_standard_numbers </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, journal_nvi_level </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,</span><span>
-#&gt; </span><span style='color: #555555;'>#   journal_publisher_name </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, journal_publisher_url </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,</span><span>
-#&gt; </span><span style='color: #555555;'>#   journal_publisher_place </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, publisher_name </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, publisher_url </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,</span><span>
-#&gt; </span><span style='color: #555555;'>#   pages_from </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, pages_to </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, pages_count </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, part_of_url </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,</span><span>
-#&gt; </span><span style='color: #555555;'>#   summary </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span></div></span></pre>
+#&gt; </span><span style='color: #555555;'>#   journal_publisher_cristin_publisher_id </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, journal_publisher_name </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,</span><span>
+#&gt; </span><span style='color: #555555;'>#   journal_publisher_url </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, journal_publisher_place </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,</span><span>
+#&gt; </span><span style='color: #555555;'>#   publisher_name </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, publisher_cristin_publisher_id </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,</span><span>
+#&gt; </span><span style='color: #555555;'>#   publisher_url </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, series_cristin_journal_id </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, series_name </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,</span><span>
+#&gt; </span><span style='color: #555555;'>#   series_international_standard_numbers </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>,</span><span>
+#&gt; </span><span style='color: #555555;'>#   classification_scientific_disciplines </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>,</span><span>
+#&gt; </span><span style='color: #555555;'>#   classification_keywords </span><span style='color: #555555;font-style: italic;'>&lt;list&gt;</span><span style='color: #555555;'>, summary </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -295,7 +253,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>
