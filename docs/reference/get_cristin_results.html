@@ -41,7 +41,7 @@
 
 <meta property="og:title" content="Get results from the Cristin API — get_cristin_results" />
 <meta property="og:description" content="get_cristin_results() takes in search parameters for the
-Cristin API and returns the results as a tibble" />
+Cristin API and returns the results as a tibble." />
 
 
 
@@ -122,7 +122,7 @@ Cristin API and returns the results as a tibble" />
 
     <div class="ref-description">
     <p><code>get_cristin_results()</code> takes in search parameters for the
-Cristin API and returns the results as a tibble</p>
+Cristin API and returns the results as a tibble.</p>
     </div>
 
     <pre class="usage"><span class='fu'>get_cristin_results</span><span class='op'>(</span><span class='va'>...</span>, page <span class='op'>=</span> <span class='fl'>1</span>, per_page <span class='op'>=</span> <span class='fl'>999</span>, fields <span class='op'>=</span> <span class='st'>"all"</span>, NVI <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
@@ -158,52 +158,33 @@ publications or all results, set to 'FALSE' by default</p></td>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A tibble with results from the API call, with one row per result.</p>
-    <h2 class="hasAnchor" id="api-parameters"><a class="anchor" href="#api-parameters"></a>API parameters</h2>
+    <h2 class="hasAnchor" id="api-parameters-the-cristin-api-recognises-many-search-parameters-"><a class="anchor" href="#api-parameters-the-cristin-api-recognises-many-search-parameters-"></a>API parameters The Cristin API recognises many search parameters.</h2>
 
-    <p>The Cristin API recognises many search parameters. You
-can find the latest specification at the Cristin API
+    <p>You can find the latest specification at the Cristin API
 <a href='https://api.cristin.no/v2/'>documentation page</a>.</p>
 <p>Here are examples of the formatting of these parameters:</p><table class='table'>
-<tr><td>parameter</td><td>type</td><td>description</td></tr>
-<tr><td><strong>doi</strong></td><td>string</td><td>DOI name (e.g. doi=10.1000/123456)</td></tr>
+<tr><td>parameter</td><td>description</td></tr>
+<tr><td><strong>doi</strong></td><td>DOI name (e.g. doi=10.1000/123456)</td></tr>
+<tr><td><strong>title</strong></td><td>The title of the result</td></tr>
+<tr><td><strong>contributor</strong></td><td>Author's name or Cristin person id</td></tr>
+<tr><td><strong>issn</strong></td><td>The issn of the result</td></tr>
+<tr><td><strong>unit</strong></td><td>Id (e.g. unit=185.53.18.10)</td></tr>
+<tr><td><strong>institution</strong></td><td>Id (one number, e.g. institution=185), name or acronym of the institution the contributors belong to</td></tr>
+<tr><td><strong>user</strong></td><td>A person's username in Cristin together with the institution id separated by ':' askeladd:185' means Cristin user 'askeladd' from the institution '185'</td></tr>
+<tr><td><strong>category</strong></td><td>Result category code, see <a href='https://api.cristin.no/v2/results/categories?lang=en'>Cristin category codes</a> for specification</td></tr>
+<tr><td><strong>published_since</strong></td><td>Results published since and inclusive the given year, (yyyy), e.g: 2005</td></tr>
+<tr><td><strong>published_before</strong></td><td>Results published before and inclusive the given year, (yyyy), e.g: 2017</td></tr>
+<tr><td><strong>created_since</strong></td><td>Results created since and inclusive the given date, (yyyy-mm-dd), e.g: 2005-03-17</td></tr>
+<tr><td><strong>created_before</strong></td><td>Results created before and inclusive the given date, (yyyy-mm-dd), e.g: 2005-03-17</td></tr>
+<tr><td><strong>modified_since</strong></td><td>Results modified since and inclusive the given date, (yyyy-mm-dd), e.g: 2005-03-17</td></tr>
+<tr><td><strong>modified_before</strong></td><td>Results modified before and inclusive the given date, (yyyy-mm-dd), e.g: 2005-03-17</td></tr>
+<tr><td><strong>year_reported</strong></td><td>The year a result was reported</td></tr>
+<tr><td><strong>project_code</strong></td><td>Project code is the internal reference number used by funding source</td></tr>
+<tr><td><strong>funding_source</strong></td><td>Funding source code e.g: NFR</td></tr>
+<tr><td><strong>funding</strong></td><td>Funding source code e.g: NFR, and project_code together separated by ':' 'NFR:1234' means 'funding_source': NFR' with 'project_code': '1234'</td></tr>
+<tr><td><strong>lang</strong></td><td>Two letter language code that determines value of fields such as institution name, one of 'en' (default), 'nb', or 'nn'.</td></tr>
 </table>
 
-
-<ul>
-<li><p><strong>title</strong> The title of the result</p></li>
-<li><p><strong>contributor</strong> Author's name or Cristin person id</p></li>
-<li><p><strong>issn</strong> The issn of the result</p></li>
-<li><p><strong>unit</strong> Id (e.g. unit=185.53.18.10)</p></li>
-<li><p><strong>institution</strong> Id (one number, e.g.
-institution=185), name or acronym of the institution the contributors
-belong to</p></li>
-<li><p><strong>user</strong> A person's username in Cristin together with the
-institution id separated by ':' 'askeladd:185' means Cristin user
-'askeladd' from the institution '185'</p></li>
-<li><p><strong>category</strong> Result category
-code, see
-<a href='https://api.cristin.no/v2/results/categories?lang=en'>Cristin
-category codes</a> for specification</p></li>
-<li><p><strong>published_since</strong> Results
-published since and inclusive the given year, (yyyy), e.g: 2005</p></li>
-<li><p><strong>published_before</strong> Results published before and inclusive the given
-year, (yyyy), e.g: 2017</p></li>
-<li><p><strong>created_since</strong> Results created since and
-inclusive the given date, (yyyy-mm-dd), e.g: 2005-03-17 *
-<strong>created_before</strong> Results created before and inclusive the given
-date, (yyyy-mm-dd), e.g: 2005-03-17 * <strong>modified_since</strong> Results
-modified since and inclusive the given date, (yyyy-mm-dd), e.g: 2005-03-17</p><ul>
-<li><p><strong>modified_before</strong> Results modified before and inclusive the given
-date, (yyyy-mm-dd), e.g: 2005-03-17 * <strong>year_reported</strong> The year a
-result was reported * <strong>project_code</strong> Project code is the internal
-reference number used by funding source * <strong>funding_source</strong> Funding
-source code e.g: NFR * <strong>funding</strong> Funding source code e.g: NFR, and
-project_code together separated by ':' 'NFR:1234' means 'funding_source':
-'NFR' with 'project_code': '1234' * <strong>lang</strong> Two letter language code
-that determines value of fields such as institution name, one of 'en'
-(default), 'nb', or 'nn'.</p></li>
-</ul></li>
-</ul>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>

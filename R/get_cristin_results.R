@@ -1,11 +1,9 @@
 #' Get results from the Cristin API
 #'
-#' @description `get_cristin_results()` takes in search parameters for the
-#'   Cristin API and returns the results as a tibble.
+#' @description `get_cristin_results()` takes in search parameters for the Cristin API and returns the results as a tibble.
 #'
-#' @details # API parameters The Cristin API recognises many search parameters.
-#' You can find the latest specification at the Cristin API
-#' \href{https://api.cristin.no/v2/}{documentation page}.
+#' @details # API parameters
+#' The Cristin API recognises many search parameters. You can find the latest specification at the Cristin API \href{https://api.cristin.no/v2/}{documentation page}.
 #'
 #' Here are examples of the formatting of these parameters:
 #'
