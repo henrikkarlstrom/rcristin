@@ -25,53 +25,33 @@ A tibble with results from the API call, with one row per result.
 }
 \description{
 \code{get_cristin_results()} takes in search parameters for the
-Cristin API and returns the results as a tibble
+Cristin API and returns the results as a tibble.
 }
-\section{API parameters}{
-The Cristin API recognises many search parameters. You
-can find the latest specification at the Cristin API
+\section{API parameters The Cristin API recognises many search parameters.}{
+You can find the latest specification at the Cristin API
 \href{https://api.cristin.no/v2/}{documentation page}.
 
-Here are examples of the formatting of these parameters:\tabular{lll}{
-   parameter \tab type \tab description \cr
-   \strong{doi} \tab string \tab DOI name (e.g. doi=10.1000/123456) \cr
-}
-
-\itemize{
-\item \strong{title} The title of the result
-\item \strong{contributor} Author's name or Cristin person id
-\item \strong{issn} The issn of the result
-\item \strong{unit} Id (e.g. unit=185.53.18.10)
-\item \strong{institution} Id (one number, e.g.
-institution=185), name or acronym of the institution the contributors
-belong to
-\item \strong{user} A person's username in Cristin together with the
-institution id separated by ':' 'askeladd:185' means Cristin user
-'askeladd' from the institution '185'
-\item \strong{category} Result category
-code, see
-\href{https://api.cristin.no/v2/results/categories?lang=en}{Cristin
-category codes} for specification
-\item \strong{published_since} Results
-published since and inclusive the given year, (yyyy), e.g: 2005
-\item \strong{published_before} Results published before and inclusive the given
-year, (yyyy), e.g: 2017
-\item \strong{created_since} Results created since and
-inclusive the given date, (yyyy-mm-dd), e.g: 2005-03-17 *
-\strong{created_before} Results created before and inclusive the given
-date, (yyyy-mm-dd), e.g: 2005-03-17 * \strong{modified_since} Results
-modified since and inclusive the given date, (yyyy-mm-dd), e.g: 2005-03-17
-\itemize{
-\item \strong{modified_before} Results modified before and inclusive the given
-date, (yyyy-mm-dd), e.g: 2005-03-17 * \strong{year_reported} The year a
-result was reported * \strong{project_code} Project code is the internal
-reference number used by funding source * \strong{funding_source} Funding
-source code e.g: NFR * \strong{funding} Funding source code e.g: NFR, and
-project_code together separated by ':' 'NFR:1234' means 'funding_source':
-'NFR' with 'project_code': '1234' * \strong{lang} Two letter language code
-that determines value of fields such as institution name, one of 'en'
-(default), 'nb', or 'nn'.
-}
+Here are examples of the formatting of these parameters:\tabular{ll}{
+   parameter \tab description \cr
+   \strong{doi} \tab DOI name (e.g. doi=10.1000/123456) \cr
+   \strong{title} \tab The title of the result \cr
+   \strong{contributor} \tab Author's name or Cristin person id \cr
+   \strong{issn} \tab The issn of the result \cr
+   \strong{unit} \tab Id (e.g. unit=185.53.18.10) \cr
+   \strong{institution} \tab Id (one number, e.g. institution=185), name or acronym of the institution the contributors belong to \cr
+   \strong{user} \tab A person's username in Cristin together with the institution id separated by ':' askeladd:185' means Cristin user 'askeladd' from the institution '185' \cr
+   \strong{category} \tab Result category code, see \href{https://api.cristin.no/v2/results/categories?lang=en}{Cristin category codes} for specification \cr
+   \strong{published_since} \tab Results published since and inclusive the given year, (yyyy), e.g: 2005 \cr
+   \strong{published_before} \tab Results published before and inclusive the given year, (yyyy), e.g: 2017 \cr
+   \strong{created_since} \tab Results created since and inclusive the given date, (yyyy-mm-dd), e.g: 2005-03-17 \cr
+   \strong{created_before} \tab Results created before and inclusive the given date, (yyyy-mm-dd), e.g: 2005-03-17 \cr
+   \strong{modified_since} \tab Results modified since and inclusive the given date, (yyyy-mm-dd), e.g: 2005-03-17 \cr
+   \strong{modified_before} \tab Results modified before and inclusive the given date, (yyyy-mm-dd), e.g: 2005-03-17 \cr
+   \strong{year_reported} \tab The year a result was reported \cr
+   \strong{project_code} \tab Project code is the internal reference number used by funding source \cr
+   \strong{funding_source} \tab Funding source code e.g: NFR \cr
+   \strong{funding} \tab Funding source code e.g: NFR, and project_code together separated by ':' 'NFR:1234' means 'funding_source': NFR' with 'project_code': '1234' \cr
+   \strong{lang} \tab Two letter language code that determines value of fields such as institution name, one of 'en' (default), 'nb', or 'nn'. \cr
 }
 }
 

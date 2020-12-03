@@ -9,33 +9,27 @@
 #'
 #' Here are examples of the formatting of these parameters:
 #'
-#' | parameter | description | | --- | --- | | \strong{doi} | DOI name (e.g.
-#' doi=10.1000/123456) | | \strong{title} | The title of the result | |
-#' \strong{contributor} | Author's name or Cristin person id | | \strong{issn} |
-#' The issn of the result | | \strong{unit} | Id (e.g. unit=185.53.18.10) | |
-#' \strong{institution} | Id (one number, e.g. institution=185), name or acronym
-#' of the institution the contributors belong to | | \strong{user} | A person's
-#' username in Cristin together with the institution id separated by ':'
-#' 'askeladd:185' means Cristin user 'askeladd' from the institution '185' | |
-#' \strong{category} | Result category code, see
-#' \href{https://api.cristin.no/v2/results/categories?lang=en}{Cristin category
-#' codes} for specification | | \strong{published_since} | Results published
-#' since and inclusive the given year, (yyyy), e.g: 2005 | |
-#' \strong{published_before} | Results published before and inclusive the given
-#' year, (yyyy), e.g: 2017 | | \strong{created_since} | Results created since
-#' and inclusive the given date, (yyyy-mm-dd), e.g: 2005-03-17 | |
-#' \strong{created_before} | Results created before and inclusive the given
-#' date, (yyyy-mm-dd), e.g: 2005-03-17 | | \strong{modified_since} | Results
-#' modified since and inclusive the given date, (yyyy-mm-dd), e.g: 2005-03-17 |
-#' | \strong{modified_before} | Results modified before and inclusive the given
-#' date, (yyyy-mm-dd), e.g: 2005-03-17 | | \strong{year_reported} | The year a
-#' result was reported | | \strong{project_code} | Project code is the internal
-#' reference number used by funding source | | \strong{funding_source} | Funding
-#' source code e.g: NFR | | \strong{funding} | Funding source code e.g: NFR, and
-#' project_code together separated by ':' 'NFR:1234' means 'funding_source':
-#' 'NFR' with 'project_code': '1234' | | \strong{lang} | Two letter language
-#' code that determines value of fields such as institution name, one of 'en'
-#' (default), 'nb', or 'nn'. |
+#' | parameter | description |
+#' | --- | --- |
+#' | \strong{doi} | DOI name (e.g. doi=10.1000/123456) |
+#' | \strong{title} | The title of the result |
+#' | \strong{contributor} | Author's name or Cristin person id |
+#' | \strong{issn} | The issn of the result |
+#' | \strong{unit} | Id (e.g. unit=185.53.18.10) |
+#' | \strong{institution} | Id (one number, e.g. institution=185), name or acronym of the institution the contributors belong to |
+#' | \strong{user} | A person's username in Cristin together with the institution id separated by ':' askeladd:185' means Cristin user 'askeladd' from the institution '185' |
+#' | \strong{category} | Result category code, see \href{https://api.cristin.no/v2/results/categories?lang=en}{Cristin category codes} for specification |
+#' | \strong{published_since} | Results published since and inclusive the given year, (yyyy), e.g: 2005 |
+#' | \strong{published_before} | Results published before and inclusive the given year, (yyyy), e.g: 2017 |
+#' | \strong{created_since} | Results created since and inclusive the given date, (yyyy-mm-dd), e.g: 2005-03-17 |
+#' | \strong{created_before} | Results created before and inclusive the given date, (yyyy-mm-dd), e.g: 2005-03-17 |
+#' | \strong{modified_since} | Results modified since and inclusive the given date, (yyyy-mm-dd), e.g: 2005-03-17 |
+#' | \strong{modified_before} | Results modified before and inclusive the given date, (yyyy-mm-dd), e.g: 2005-03-17 |
+#' | \strong{year_reported} | The year a result was reported |
+#' | \strong{project_code} | Project code is the internal reference number used by funding source |
+#' | \strong{funding_source} | Funding source code e.g: NFR |
+#' | \strong{funding} | Funding source code e.g: NFR, and project_code together separated by ':' 'NFR:1234' means 'funding_source': NFR' with 'project_code': '1234' |
+#' | \strong{lang} | Two letter language code that determines value of fields such as institution name, one of 'en' (default), 'nb', or 'nn'. |
 #'
 #' @return A tibble with results from the API call, with one row per result.
 #' @export
