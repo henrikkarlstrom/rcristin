@@ -129,19 +129,25 @@ get_cristin_results <- function(
         paging <- base_data2[["headers"]][["link"]]
 
         base_data2 <- jsonlite::fromJSON(
-          txt = httr::content(base_data, "text"),
+          txt = httr::content(base_data2, "text"),
           flatten = TRUE
         )
 
         base_data2 <- dplyr::mutate(
-          .data = base_data,
+          .data = base_data2,
           title = dplyr::coalesce(
-            dplyr::select(base_data, dplyr::starts_with("title"))
-          ),
-          summary = dplyr::coalesce(
-            dplyr::select(base_data, dplyr::starts_with("summary"))
+            !!!dplyr::select(base_data2, dplyr::starts_with("title"))
+            )
           )
-        )
+
+        if(any(startsWith(names(base_data2), "summary"))){
+          base_data2 <- dplyr::mutate(
+            .data = base_data2,
+            summary = dplyr::coalesce(
+              !!!dplyr::select(base_data2, dplyr::starts_with("summary"))
+              )
+            )
+          }
 
         base_data <- dplyr::bind_rows(
           base_data,
